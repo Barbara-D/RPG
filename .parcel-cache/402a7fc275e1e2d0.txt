@@ -45,7 +45,7 @@
 116C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\core\test\fixtures\invalid-source-not-file\package.json133023563883779167 0
 102C:\Users\Barbara\Documents\Three.js\RPG\node_modules\lmdb\dependencies\lmdb\libraries\liblmdb\Makefile133023563674156403 0
 91C:\Users\Barbara\Documents\Three.js\RPG\node_modules\caniuse-lite\dist\unpacker\browsers.js133023563669857891 0
-44C:\Users\Barbara\Documents\Three.js\RPG\dist133023627635345620 1
+44C:\Users\Barbara\Documents\Three.js\RPG\dist133023628056299186 1
 87C:\Users\Barbara\Documents\Three.js\RPG\node_modules\cosmiconfig\dist\ExplorerSync.d.ts133023563669000182 0
 73C:\Users\Barbara\Documents\Three.js\RPG\node_modules\acorn\dist\acorn.mjs133023563667933044 0
 61C:\Users\Barbara\Documents\Three.js\RPG\node_modules\escalade133023563666696345 1
@@ -81,7 +81,7 @@
 103C:\Users\Barbara\Documents\Three.js\RPG\node_modules\caniuse-lite\data\features\spellcheck-attribute.js133023563688639231 0
 104C:\Users\Barbara\Documents\Three.js\RPG\node_modules\caniuse-lite\data\features\contentsecuritypolicy.js133023563670256836 0
 67C:\Users\Barbara\Documents\Three.js\RPG\node_modules\.bin\acorn.ps1133023564489959622 0
-52C:\Users\Barbara\Documents\Three.js\RPG\package.json133023627630678657 0
+52C:\Users\Barbara\Documents\Three.js\RPG\package.json133023628054592690 0
 77C:\Users\Barbara\Documents\Three.js\RPG\node_modules\json5\lib\stringify.d.ts133023563668471600 0
 102C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\transformer-image\src\ImageTransformer.js133023563722816829 0
 58C:\Users\Barbara\Documents\Three.js\RPG\node_modules\json5133023563667943011 1
@@ -2837,7 +2837,7 @@
 99C:\Users\Barbara\Documents\Three.js\RPG\node_modules\caniuse-lite\data\features\css-motion-paths.js133023563671174373 0
 110C:\Users\Barbara\Documents\Three.js\RPG\node_modules\caniuse-lite\data\features\css-font-rendering-controls.js133023563670974927 0
 97C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@babel\highlight\node_modules\chalk\index.js133023563665070698 0
-67C:\Users\Barbara\Documents\Three.js\RPG\dist\index.61d3354a.css.map133023573537834902 0
+67C:\Users\Barbara\Documents\Three.js\RPG\dist\index.61d3354a.css.map133023627759769122 0
 76C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\diagnostic\test133023563793219390 1
 86C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\core\src\applyRuntimes.js133023563813745568 0
 97C:\Users\Barbara\Documents\Three.js\RPG\node_modules\caniuse-lite\data\features\css-gencontent.js133023563670984879 0
@@ -3671,7 +3671,7 @@
 75C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\runtime-js\src133023563756780584 1
 83C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\runtime-js\src\helpers133023563756840425 1
 91C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\runtime-js\src\helpers\browser133023563756830436 1
-55C:\Users\Barbara\Documents\Three.js\RPG\dist\index.html133023614747824680 0
+55C:\Users\Barbara\Documents\Three.js\RPG\dist\index.html133023627759719248 0
 97C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\runtime-js\src\helpers\bundle-url.js133023563747166932 0
 101C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\runtime-js\src\helpers\get-worker-url.js133023563747226789 0
 90C:\Users\Barbara\Documents\Three.js\RPG\node_modules\@parcel\runtime-js\src\helpers\worker133023563756830436 1
@@ -4150,6 +4150,6 @@
 64C:\Users\Barbara\Documents\Three.js\RPG\node_modules\.bin\terser133023564489989537 0
 68C:\Users\Barbara\Documents\Three.js\RPG\node_modules\.bin\terser.cmd133023564489989537 0
 68C:\Users\Barbara\Documents\Three.js\RPG\node_modules\.bin\terser.ps1133023564489989537 0
-63C:\Users\Barbara\Documents\Three.js\RPG\dist\index.61d3354a.css133023573537785052 0
-62C:\Users\Barbara\Documents\Three.js\RPG\dist\index.975ef6c8.js133023627635305738 0
-66C:\Users\Barbara\Documents\Three.js\RPG\dist\index.975ef6c8.js.map133023627635345620 0
+63C:\Users\Barbara\Documents\Three.js\RPG\dist\index.61d3354a.css133023627759719248 0
+62C:\Users\Barbara\Documents\Three.js\RPG\dist\index.975ef6c8.js133023628056269256 0
+66C:\Users\Barbara\Documents\Three.js\RPG\dist\index.975ef6c8.js.map133023628056289215 0

@@ -41,3 +41,6 @@ git reset --hard origin/main
 ---------RANDOM----------
 
 2x "ctrl +" - zoom za screenshotove
+
+resolve emphasised items (green dot):
+- Ctrl + shift + p and searching Developer: Reload Window
