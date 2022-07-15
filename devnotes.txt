@@ -17,6 +17,8 @@ git checkout main
 git branch -d development
 - delete the development branch
 
+git branch
+-show all local branches of the repository
 
 git add *
 -propose changes
@@ -24,8 +26,8 @@ git add *
 git commit -m "commit message"
 -committed to HEAD but not in remote yet
 
-git push origin main
--send changes to remote repository (in this case main branch)
+git push origin development
+-send changes to remote repository (in this case development branch)
 
 git checkout -- filename
 - replaces local changes with last content in HEAD (so from commit)
@@ -33,3 +35,9 @@ git checkout -- filename
 git fetch origin
 git reset --hard origin/main
 - drop all local changes and commits
+
+
+
+---------RANDOM----------
+
+2x "ctrl +" - zoom za screenshotove
