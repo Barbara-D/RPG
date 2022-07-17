@@ -1,0 +1,46 @@
+//if files don't sync
+https://stackoverflow.com/questions/64713341/how-do-i-include-asset-files-with-parcel-js
+https://github.com/elwin013/parcel-reporter-static-files-copy
+
+-----------GIT--------------
+
+- create a development branch to be worked on, then merge into main regularly (when something is done)
+- a branch named after a feature when working on something specific
+
+
+git checkout -b development
+- create a new branch named "development" and switch into it
+
+git checkout main
+- switch back to main branch
+
+git branch -d development
+- delete the development branch
+
+git branch
+-show all local branches of the repository
+
+git add *
+-propose changes
+
+git commit -m "commit message"
+-committed to HEAD but not in remote yet
+
+git push origin development
+-send changes to remote repository (in this case development branch)
+
+git checkout -- filename
+- replaces local changes with last content in HEAD (so from commit)
+
+git fetch origin
+git reset --hard origin/main
+- drop all local changes and commits
+
+
+
+---------RANDOM----------
+
+2x "ctrl +" - zoom za screenshotove
+
+resolve emphasised items (green dot):
+- Ctrl + shift + p and searching Developer: Reload Window
