@@ -1,6 +1,6 @@
 //if files don't sync
 https://stackoverflow.com/questions/64713341/how-do-i-include-asset-files-with-parcel-js
-
+https://github.com/elwin013/parcel-reporter-static-files-copy
 
 -----------GIT--------------
 
