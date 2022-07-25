@@ -1,28 +1,28 @@
 import * as THREE from "three";
-// console.log("JS works!");
+import { Camera } from "./fundamentals/camera.js";
+import Light from "./fundamentals/light.js";
 
-// let testDiv = document.createElement("div");
-// testDiv.innerHTML = "HTML works!";
-// document.body.appendChild(testDiv);
+//CONSTANTS
+const fov = 75;
+const near = 1.0;
+const far = 1000;
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
+
+let camera = new Camera(fov, window.innerWidth / window.innerHeight, near, far);
+camera.position.set(0, 0, 6);
+
+let light = new Light();
+scene.add(light.container);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const material = new THREE.MeshPhongMaterial({ color: 0x00ffff });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
-
-camera.position.z = 5;
 
 function animate() {
   requestAnimationFrame(animate);

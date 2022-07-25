@@ -532,23 +532,29 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"8lqZg":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _three = require("three");
-// console.log("JS works!");
-// let testDiv = document.createElement("div");
-// testDiv.innerHTML = "HTML works!";
-// document.body.appendChild(testDiv);
+var _cameraJs = require("./fundamentals/camera.js");
+var _lightJs = require("./fundamentals/light.js");
+var _lightJsDefault = parcelHelpers.interopDefault(_lightJs);
+//CONSTANTS
+const fov = 75;
+const near = 1.0;
+const far = 1000;
 const scene = new _three.Scene();
-const camera = new _three.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+let camera = new (0, _cameraJs.Camera)(fov, window.innerWidth / window.innerHeight, near, far);
+camera.position.set(0, 0, 6);
+let light = new (0, _lightJsDefault.default)();
+scene.add(light.container);
 const renderer = new _three.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 const geometry = new _three.BoxGeometry(1, 1, 1);
-const material = new _three.MeshBasicMaterial({
-    color: 0x00ff00
+const material = new _three.MeshPhongMaterial({
+    color: 0x00ffff
 });
 const cube = new _three.Mesh(geometry, material);
 scene.add(cube);
-camera.position.z = 5;
 function animate() {
     requestAnimationFrame(animate);
     cube.rotation.x += 0.01;
@@ -557,7 +563,7 @@ function animate() {
 }
 animate();
 
-},{"three":"ktPTu"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","./fundamentals/camera.js":"9ITaF","./fundamentals/light.js":"7HBM9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ktPTu":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ACESFilmicToneMapping", ()=>ACESFilmicToneMapping);
@@ -29233,6 +29239,38 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
+},{}],"9ITaF":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Camera", ()=>Camera);
+var _three = require("three");
+class Camera extends _three.PerspectiveCamera {
+    constructor(fov, aspect, near, far){
+        super(fov, aspect, near, far);
+    // this.position.set(0, 20, 0);
+    }
+}
+
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7HBM9":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _three = require("three");
+class Light {
+    constructor(){
+        this.container = new _three.Object3D();
+        // this.container.matrixAutoUpdate = false;
+        this.setInstance();
+    }
+    setInstance() {
+        this.ambientLight = new _three.AmbientLight(0xffffff, 0.6);
+        this.directionalLight = new _three.DirectionalLight(0xffffff, 0.6);
+        this.directionalLight.position.set(50, 50, 50);
+        this.container.add(this.ambientLight);
+        this.container.add(this.directionalLight);
+    }
+}
+exports.default = Light;
+
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
 
 //# sourceMappingURL=index.975ef6c8.js.map
