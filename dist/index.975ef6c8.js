@@ -539,16 +539,17 @@ var _lightJs = require("./fundamentals/light.js");
 var _lightJsDefault = parcelHelpers.interopDefault(_lightJs);
 //CONSTANTS
 const fov = 75;
-const near = 1.0;
-const far = 1000;
+const near = 0.1;
+const far = 2000;
+const overworld = document.getElementById("overworld");
+//CREATING A NEW SCENE
 const scene = new _three.Scene();
 let camera = new (0, _cameraJs.Camera)(fov, window.innerWidth / window.innerHeight, near, far);
-camera.position.set(0, 0, 6);
 let light = new (0, _lightJsDefault.default)();
 scene.add(light.container);
-const renderer = new _three.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+// const renderer = new THREE.WebGLRenderer();
+// renderer.setSize(window.innerWidth, window.innerHeight);
+// document.body.appendChild(renderer.domElement);
 const geometry = new _three.BoxGeometry(1, 1, 1);
 const material = new _three.MeshPhongMaterial({
     color: 0x00ffff
@@ -561,6 +562,21 @@ function animate() {
     cube.rotation.y += 0.01;
     renderer.render(scene, camera);
 }
+async function init() {
+    //RENDERER SETUP
+    //transparent background, antialiasing makes everything smoother but can hinder performance
+    renderer = new _three.WebGLRenderer({
+        alpha: true,
+        antialias: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    //tonemapping changes the look of the whole scene
+    renderer.toneMapping = (0, _three.ACESFilmicToneMapping);
+    //enables rendering of shadows
+    renderer.shadowMap.enabled = true;
+    overworld.appendChild(renderer.domElement);
+}
+init();
 animate();
 
 },{"three":"ktPTu","./fundamentals/camera.js":"9ITaF","./fundamentals/light.js":"7HBM9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ktPTu":[function(require,module,exports) {
@@ -29247,7 +29263,8 @@ var _three = require("three");
 class Camera extends _three.PerspectiveCamera {
     constructor(fov, aspect, near, far){
         super(fov, aspect, near, far);
-    // this.position.set(0, 20, 0);
+        this.position.set(0, 8, 20);
+        this.lookAt(new _three.Vector3(0, -100, -1000));
     }
 }
 

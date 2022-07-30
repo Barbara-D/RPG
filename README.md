@@ -9,3 +9,9 @@ Start development server:
 ```bash
 npm run start
 ```
+
+Publish directly to GitHub pages:
+
+```bash
+npm run deploy
+```
