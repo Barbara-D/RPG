@@ -556,12 +556,6 @@ const material = new _three.MeshPhongMaterial({
 });
 const cube = new _three.Mesh(geometry, material);
 scene.add(cube);
-function animate() {
-    requestAnimationFrame(animate);
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-    renderer.render(scene, camera);
-}
 async function init() {
     //RENDERER SETUP
     //transparent background, antialiasing makes everything smoother but can hinder performance
@@ -575,6 +569,21 @@ async function init() {
     //enables rendering of shadows
     renderer.shadowMap.enabled = true;
     overworld.appendChild(renderer.domElement);
+    window.addEventListener("resize", onWindowResize, false);
+}
+function animate() {
+    requestAnimationFrame(animate);
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+    renderer.render(scene, camera);
+}
+//this works, but might want to refactor the code to look cleaner
+function onWindowResize() {
+    HEIGHT = window.innerHeight;
+    WIDTH = window.innerWidth;
+    renderer.setSize(WIDTH, HEIGHT);
+    camera.aspect = WIDTH / HEIGHT;
+    camera.updateProjectionMatrix();
 }
 init();
 animate();
