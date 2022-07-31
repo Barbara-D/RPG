@@ -532,63 +532,101 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"8lqZg":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-var _three = require("three");
-var _cameraJs = require("./fundamentals/camera.js");
-var _lightJs = require("./fundamentals/light.js");
-var _lightJsDefault = parcelHelpers.interopDefault(_lightJs);
-//CONSTANTS
-const fov = 75;
-const near = 0.1;
-const far = 2000;
+var _applicationJs = require("./fundamentals/application.js");
+//access the div from index.html
 const overworld = document.getElementById("overworld");
-//CREATING A NEW SCENE
-const scene = new _three.Scene();
-let camera = new (0, _cameraJs.Camera)(fov, window.innerWidth / window.innerHeight, near, far);
-let light = new (0, _lightJsDefault.default)();
-scene.add(light.container);
-// const renderer = new THREE.WebGLRenderer();
-// renderer.setSize(window.innerWidth, window.innerHeight);
-// document.body.appendChild(renderer.domElement);
-const geometry = new _three.BoxGeometry(1, 1, 1);
-const material = new _three.MeshPhongMaterial({
-    color: 0x00ffff
-});
-const cube = new _three.Mesh(geometry, material);
-scene.add(cube);
-async function init() {
-    //RENDERER SETUP
-    //transparent background, antialiasing makes everything smoother but can hinder performance
-    renderer = new _three.WebGLRenderer({
-        alpha: true,
-        antialias: true
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    //tonemapping changes the look of the whole scene
-    renderer.toneMapping = (0, _three.ACESFilmicToneMapping);
-    //enables rendering of shadows
-    renderer.shadowMap.enabled = true;
-    overworld.appendChild(renderer.domElement);
-    window.addEventListener("resize", onWindowResize, false);
+const sceneManager = new (0, _applicationJs.SceneManager)(overworld);
+bindEventListeners();
+render();
+function bindEventListeners() {
+    window.onresize = resizeCanvas;
+    resizeCanvas();
 }
-function animate() {
-    requestAnimationFrame(animate);
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-    renderer.render(scene, camera);
+function resizeCanvas() {
+    overworld.style.width = "100%";
+    overworld.style.height = "100%";
+    overworld.width = overworld.offsetWidth;
+    overworld.height = overworld.offsetHeight;
+    sceneManager.onWindowResize();
 }
-//this works, but might want to refactor the code to look cleaner
-function onWindowResize() {
-    HEIGHT = window.innerHeight;
-    WIDTH = window.innerWidth;
-    renderer.setSize(WIDTH, HEIGHT);
-    camera.aspect = WIDTH / HEIGHT;
-    camera.updateProjectionMatrix();
+function render() {
+    requestAnimationFrame(render);
+    sceneManager.update();
 }
-init();
-animate();
 
-},{"three":"ktPTu","./fundamentals/camera.js":"9ITaF","./fundamentals/light.js":"7HBM9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ktPTu":[function(require,module,exports) {
+},{"./fundamentals/application.js":"6NpX4"}],"6NpX4":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "SceneManager", ()=>SceneManager);
+var _three = require("three");
+var _lightJs = require("./light.js");
+var _boxJs = require("./box.js");
+function SceneManager(canvas) {
+    const clock = new _three.Clock();
+    const screenDimensions = {
+        width: canvas.width,
+        height: canvas.height
+    };
+    //initialize main application elements with private methods
+    const scene1 = buildScene();
+    const renderer1 = buildRender(screenDimensions);
+    const camera1 = buildCamera(screenDimensions);
+    const sceneSubjects1 = createSceneSubjects(scene1);
+    //create a new scene with a function
+    function buildScene() {
+        const scene = new _three.Scene();
+        // scene.background = new THREE.Color("#000");
+        return scene;
+    }
+    //define renderer with a function
+    function buildRender({ width , height  }) {
+        const renderer = new _three.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: true
+        });
+        const DPR = window.devicePixelRatio ? window.devicePixelRatio : 1;
+        renderer.setPixelRatio(DPR);
+        renderer.setSize(width, height);
+        renderer.gammaInput = true;
+        renderer.gammaOutput = true;
+        return renderer;
+    }
+    function buildCamera({ width , height  }) {
+        const aspectRatio = width / height;
+        const fieldOfView = 60;
+        const nearPlane = 1;
+        const farPlane = 100;
+        const camera = new _three.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
+        return camera;
+    }
+    //creates an array of scene subjects
+    function createSceneSubjects(scene) {
+        const sceneSubjects = [
+            new (0, _lightJs.Light)(scene),
+            new (0, _boxJs.TestBox)(scene)
+        ];
+        return sceneSubjects;
+    }
+    //these are the public functions
+    //(In case we need to listen to other DOM events, SceneManager will have more public methods.
+    //For example onClick(x, y), will be called by the main when an onclick event is registered.)
+    this.update = function() {
+        const elapsedTime = clock.getElapsedTime();
+        for(let i = 0; i < sceneSubjects1.length; i++)sceneSubjects1[i].update(elapsedTime);
+        renderer1.render(scene1, camera1);
+    };
+    this.onWindowResize = function() {
+        const { width , height  } = canvas;
+        screenDimensions.width = width;
+        screenDimensions.height = height;
+        camera1.aspect = width / height;
+        camera1.updateProjectionMatrix();
+        renderer1.setSize(width, height);
+    };
+}
+
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./light.js":"7HBM9","./box.js":"lTEHs"}],"ktPTu":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ACESFilmicToneMapping", ()=>ACESFilmicToneMapping);
@@ -29264,39 +29302,59 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"9ITaF":[function(require,module,exports) {
+},{}],"7HBM9":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Camera", ()=>Camera);
+parcelHelpers.export(exports, "Light", ()=>Light) //OLD LIGHT CLASS
+ // export default class Light {
+ //   constructor() {
+ //     this.container = new THREE.Object3D();
+ //     // this.container.matrixAutoUpdate = false;
+ //     this.setInstance();
+ //   }
+ //   setInstance() {
+ //     this.ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+ //     this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+ //     this.directionalLight.position.set(50, 50, 50);
+ //     this.container.add(this.ambientLight);
+ //     this.container.add(this.directionalLight);
+ //   }
+ // }
+;
 var _three = require("three");
-class Camera extends _three.PerspectiveCamera {
-    constructor(fov, aspect, near, far){
-        super(fov, aspect, near, far);
-        this.position.set(0, 8, 20);
-        this.lookAt(new _three.Vector3(0, -100, -1000));
-    }
+function Light(scene) {
+    // const pointLight = new THREE.PointLight("#2222ff", 0.6);
+    // scene.add(pointLight);
+    const ambientLight = new _three.AmbientLight(0xffffff, 0.4);
+    scene.add(ambientLight);
+    directionalLight = new _three.DirectionalLight(0xffffff, 0.4);
+    directionalLight.position.set(50, 50, 50);
+    scene.add(directionalLight);
+    //can just leave empty if i don't want any changes overtime
+    this.update = function(time) {
+    // pointLight.intensity = (Math.sin(time) + 1.5) / 1.5;
+    // pointLight.color.setHSL(Math.sin(time), 0.5, 0.5);
+    };
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7HBM9":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three":"ktPTu"}],"lTEHs":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "TestBox", ()=>TestBox);
 var _three = require("three");
-class Light {
-    constructor(){
-        this.container = new _three.Object3D();
-        // this.container.matrixAutoUpdate = false;
-        this.setInstance();
-    }
-    setInstance() {
-        this.ambientLight = new _three.AmbientLight(0xffffff, 0.6);
-        this.directionalLight = new _three.DirectionalLight(0xffffff, 0.6);
-        this.directionalLight.position.set(50, 50, 50);
-        this.container.add(this.ambientLight);
-        this.container.add(this.directionalLight);
-    }
+function TestBox(scene) {
+    const radius = 2;
+    const mesh = new _three.Mesh(new _three.IcosahedronBufferGeometry(radius, 2), new _three.MeshStandardMaterial({
+        flatShading: true
+    }));
+    mesh.position.set(0, 0, -20);
+    scene.add(mesh);
+    this.update = function(time) {
+        const scale = Math.sin(time) + 2;
+        mesh.scale.set(scale, scale, scale);
+    };
 }
-exports.default = Light;
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three":"ktPTu"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
 
 //# sourceMappingURL=index.975ef6c8.js.map
