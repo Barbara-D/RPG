@@ -590,7 +590,7 @@ function SceneManager(canvas) {
     const dynamicSubjects = [];
     const sceneSubjects1 = createSceneSubjects(scene1);
     var keyMap = [];
-    var theCharacter;
+    var theCharacter, theLight, thePlane, theTestBox;
     //create a new scene with a function
     function buildScene() {
         const scene = new _three.Scene();
@@ -30044,7 +30044,7 @@ class Light {
         const pointLight = new _three.PointLight(0xffffff, 0.4);
         scene.add(pointLight);
         const directionalLight = new _three.DirectionalLight(0xffffff, 0.4);
-        directionalLight.position.set(50, 100, 0);
+        directionalLight.position.set(0, 200, 0);
         directionalLight.castShadow = true;
         scene.add(directionalLight);
         //can just leave function empty if we don't want any changes overtime
@@ -32632,30 +32632,51 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Character", ()=>Character);
 var _three = require("three");
+var _gltfloader = require("three/examples/jsm/loaders/GLTFLoader");
 class Character {
     constructor(scene){
-        const geometry = new _three.BoxGeometry(2, 2, 2);
-        const material = new _three.MeshPhongMaterial({
-            color: 0xff0000
-        });
-        const char = new _three.Mesh(geometry, material);
-        char.position.set(0, 1, 30);
-        char.castShadow = true;
-        scene.add(char);
-        this.update = function(time) {};
+        var modelLoader = new (0, _gltfloader.GLTFLoader)();
+        this.model;
+        this.height;
+        this.width;
+        modelLoader.load("../../resources/models/robot2.gltf", (function(gltf) {
+            this.model = gltf.scene;
+            this.model.traverse(function(child) {
+                if (child.isMesh) child.castShadow = true;
+            });
+            var scale = 0.025;
+            this.model.scale.set(scale, scale, scale);
+            this.model.position.set(15, 4, 15);
+            scene.add(this.model);
+            var boundingBox = new _three.Box3().setFromObject(this.model);
+            this.height = boundingBox.getSize().y;
+            this.width = boundingBox.getSize().x;
+        }).bind(this));
+        //mozda staviti kao po sinusoidi da pluta gore dolje sporo
+        this.update = function(time) {
+            const pos = Math.sin(time) + 3.5;
+            this.model.position.y = pos;
+        };
+        //controls
         this.handleInput = function(keyMap, camera) {
             //w on keyboard, forwards
-            if (keyMap[87]) char.position.z -= 1;
+            if (keyMap[87]) this.model.position.z -= 1;
             //s on keyboard, backwards
-            if (keyMap[83]) char.position.z += 1;
-            //a on keyboard, backwards
-            if (keyMap[65]) char.position.x -= 1;
-            //d on keyboard, backwards
-            if (keyMap[68]) char.position.x += 1;
+            if (keyMap[83]) this.model.position.z += 1;
+            //a on keyboard, left
+            if (keyMap[65]) {
+                this.model.position.x -= 1;
+                this.model.rotation.y -= 0.01;
+            }
+            //d on keyboard, right
+            if (keyMap[68]) {
+                this.model.position.x += 1;
+                this.model.rotation.y += 0.01;
+            }
         };
     }
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three/examples/jsm/loaders/GLTFLoader":"dVRsF"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
 
 //# sourceMappingURL=index.975ef6c8.js.map

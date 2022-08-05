@@ -23,7 +23,7 @@ export function SceneManager(canvas) {
   const dynamicSubjects = [];
   const sceneSubjects = createSceneSubjects(scene);
   var keyMap = [];
-  var theCharacter;
+  var theCharacter, theLight, thePlane, theTestBox;
 
   //create a new scene with a function
   function buildScene() {

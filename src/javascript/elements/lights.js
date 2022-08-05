@@ -9,7 +9,7 @@ export class Light {
     scene.add(pointLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);
-    directionalLight.position.set(50, 100, 0);
+    directionalLight.position.set(0, 200, 0);
     directionalLight.castShadow = true;
 
     scene.add(directionalLight);
