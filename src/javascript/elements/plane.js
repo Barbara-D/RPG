@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export class Plane {
   constructor(scene) {
-    const geometry = new THREE.PlaneGeometry(200, 200, 1, 1);
+    const geometry = new THREE.PlaneGeometry(300, 300, 1, 1);
     const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
     const plane = new THREE.Mesh(geometry, material);
 

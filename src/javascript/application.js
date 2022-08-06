@@ -56,9 +56,9 @@ export function SceneManager(canvas) {
 
   function buildCamera({ width, height }) {
     const aspectRatio = width / height;
-    const fieldOfView = 75;
+    const fieldOfView = 60;
     const nearPlane = 0.1;
-    const farPlane = 1000;
+    const farPlane = 2000;
     const camera = new THREE.PerspectiveCamera(
       fieldOfView,
       aspectRatio,

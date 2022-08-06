@@ -617,9 +617,9 @@ function SceneManager(canvas) {
     }
     function buildCamera({ width , height  }) {
         const aspectRatio = width / height;
-        const fieldOfView = 75;
+        const fieldOfView = 60;
         const nearPlane = 0.1;
-        const farPlane = 1000;
+        const farPlane = 2000;
         const camera = new _three.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
         camera.position.set(0, 20, 80);
         // camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -30039,14 +30039,29 @@ parcelHelpers.export(exports, "Light", ()=>Light);
 var _three = require("three");
 class Light {
     constructor(scene){
-        const ambientLight = new _three.AmbientLight(0xffffff, 0.75);
+        const ambientLight = new _three.AmbientLight(0xffffff, 0.55);
         scene.add(ambientLight);
-        const pointLight = new _three.PointLight(0xffffff, 0.4);
-        scene.add(pointLight);
-        const directionalLight = new _three.DirectionalLight(0xffffff, 0.4);
-        directionalLight.position.set(0, 200, 0);
+        const directionalLight = new _three.DirectionalLight(0xffffff, 1.0);
+        directionalLight.position.set(0, 40, 0);
+        directionalLight.target.position.set(0, 0, 0);
         directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        directionalLight.shadow.camera.top = 100;
+        directionalLight.shadow.camera.bottom = -100;
+        directionalLight.shadow.camera.right = 100;
+        directionalLight.shadow.camera.left = -100;
+        directionalLight.shadow.camera.near = 0.5;
+        directionalLight.shadow.camera.far = 500;
         scene.add(directionalLight);
+        scene.add(new _three.CameraHelper(directionalLight.shadow.camera));
+        // const pointLight = new THREE.PointLight(0xffffff, 0.4);
+        // scene.add(pointLight);
+        const hemiLight = new _three.HemisphereLight(0xffffff, 0xffffff, 0.5);
+        hemiLight.color.setHSL(0.6, 1, 0.6);
+        hemiLight.groundColor.setHSL(0.095, 1, 0.75);
+        hemiLight.position.set(0, 50, 0);
+        scene.add(hemiLight);
         //can just leave function empty if we don't want any changes overtime
         this.update = function(time) {
         // pointLight.intensity = (Math.sin(time) + 1.5) / 1.5;
@@ -30205,7 +30220,7 @@ parcelHelpers.export(exports, "Plane", ()=>Plane);
 var _three = require("three");
 class Plane {
     constructor(scene){
-        const geometry = new _three.PlaneGeometry(200, 200, 1, 1);
+        const geometry = new _three.PlaneGeometry(300, 300, 1, 1);
         const material = new _three.MeshPhongMaterial({
             color: 0xffffff
         });
@@ -32630,7 +32645,8 @@ function buildNodeHierarchy(nodeId, parentObject, json, parser) {
 },{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7JrJ2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Character", ()=>Character);
+parcelHelpers.export(exports, "Character", ()=>Character) //eventualno dodati ponasanja ako su stisnute dvije tipke istovremeno (al to je puno repetitivnih if-ova)
+;
 var _three = require("three");
 var _gltfloader = require("three/examples/jsm/loaders/GLTFLoader");
 class Character {
@@ -32652,7 +32668,7 @@ class Character {
             this.height = boundingBox.getSize().y;
             this.width = boundingBox.getSize().x;
         }).bind(this));
-        //mozda staviti kao po sinusoidi da pluta gore dolje sporo
+        // po sinusoidi lebdi gore dolje sporo
         this.update = function(time) {
             const pos = Math.sin(time) + 3.5;
             this.model.position.y = pos;
@@ -32660,18 +32676,36 @@ class Character {
         //controls
         this.handleInput = function(keyMap, camera) {
             //w on keyboard, forwards
-            if (keyMap[87]) this.model.position.z -= 1;
+            if (keyMap[87]) {
+                this.model.position.z -= 1;
+                this.model.rotation.y = Math.PI;
+                camera.lookAt(this.model.position);
+                camera.position.z = this.model.position.z + 20;
+                camera.position.x = this.model.position.x + 20;
+            }
             //s on keyboard, backwards
-            if (keyMap[83]) this.model.position.z += 1;
+            if (keyMap[83]) {
+                this.model.position.z += 1;
+                this.model.rotation.y = 0;
+                camera.lookAt(this.model.position);
+                camera.position.z = this.model.position.z + 20;
+                camera.position.x = this.model.position.x + 20;
+            }
             //a on keyboard, left
             if (keyMap[65]) {
                 this.model.position.x -= 1;
-                this.model.rotation.y -= 0.01;
+                this.model.rotation.y = -Math.PI / 2;
+                camera.lookAt(this.model.position);
+                camera.position.x = this.model.position.x + 20;
+                camera.position.z = this.model.position.z + 20;
             }
             //d on keyboard, right
             if (keyMap[68]) {
                 this.model.position.x += 1;
-                this.model.rotation.y += 0.01;
+                this.model.rotation.y = Math.PI / 2;
+                camera.lookAt(this.model.position);
+                camera.position.x = this.model.position.x + 20;
+                camera.position.z = this.model.position.z + 20;
             }
         };
     }
