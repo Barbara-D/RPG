@@ -7,16 +7,16 @@ export class TestBox {
     const material = new THREE.MeshPhongMaterial({ color: 0x00ffff });
     const cube = new THREE.Mesh(geometry, material);
 
-    cube.position.set(0, 2, 0);
+    cube.position.set(-20, 2, -20);
     cube.castShadow = true;
 
     scene.add(cube);
 
     //omg round boi for the MC
-    const geom2 = new RoundedBoxGeometry(3, 3, 3, 4, 0.5);
-    const cube2 = new THREE.Mesh(geom2, material);
-    cube2.position.set(10, 1.5, 10);
-    scene.add(cube2);
+    // const geom2 = new RoundedBoxGeometry(3, 3, 3, 4, 0.5);
+    // const cube2 = new THREE.Mesh(geom2, material);
+    // cube2.position.set(10, 1.5, 10);
+    // scene.add(cube2);
 
     this.update = function (time) {
       const scale = Math.sin(time) + 2;

@@ -2,6 +2,8 @@ import * as THREE from "three";
 
 export class Light {
   constructor(scene) {
+    let halfPlane = 150;
+
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
@@ -11,10 +13,10 @@ export class Light {
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
-    directionalLight.shadow.camera.top = 100;
-    directionalLight.shadow.camera.bottom = -100;
-    directionalLight.shadow.camera.right = 100;
-    directionalLight.shadow.camera.left = -100;
+    directionalLight.shadow.camera.top = halfPlane;
+    directionalLight.shadow.camera.bottom = -halfPlane;
+    directionalLight.shadow.camera.right = halfPlane;
+    directionalLight.shadow.camera.left = -halfPlane;
     directionalLight.shadow.camera.near = 0.5;
     directionalLight.shadow.camera.far = 500;
 
