@@ -40,6 +40,8 @@ git reset --hard origin/main
 
 ---------RANDOM----------
 
+if server doesn't update, delete dist folder to force rebuild
+
 2x "ctrl +" - zoom za screenshotove
 
 resolve emphasised items (green dot):

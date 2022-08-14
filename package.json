@@ -3,7 +3,9 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build"
+    "build": "parcel build",
+    "predeploy": "rm -rf dist && parcel build ./src/index.html --public-url ./",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "parcel": "^2.6.2",
@@ -45,6 +47,7 @@
     "escalade": "^3.1.1",
     "escape-string-regexp": "^1.0.5",
     "get-port": "^4.2.0",
+    "gh-pages": "^4.0.0",
     "globals": "^13.16.0",
     "has-flag": "^4.0.0",
     "htmlnano": "^2.0.2",
@@ -100,12 +103,12 @@
     "yaml": "^1.10.2"
   },
   "staticFiles": {
-    "staticPath": "src/resources",
+    "staticPath": "src/javascript/elements/resources",
     "staticOutPath": "resources"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Barbara-D/RPG.git"
+    "url": "git+https://github.com/Barbara-D/three_parcel_test.git"
   },
   "keywords": [
     "rpg",
