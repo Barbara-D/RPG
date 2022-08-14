@@ -8,7 +8,7 @@ export class Character {
     this.height;
     this.width;
     //make this smaller if i create edge elements
-    let halfPlane = 120;
+    let halfPlane = 110;
 
     modelLoader.load(
       "robot.gltf",

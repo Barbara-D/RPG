@@ -30040,7 +30040,7 @@ parcelHelpers.export(exports, "Light", ()=>Light);
 var _three = require("three");
 class Light {
     constructor(scene){
-        let halfPlane = 150;
+        let halfPlane = 130;
         const ambientLight = new _three.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
         const directionalLight = new _three.DirectionalLight(0xffffff, 1.0);
@@ -30075,14 +30075,7 @@ class Light {
 },{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3Zrf3":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "TestBox", ()=>TestBox) //   const radius = 2;
- //   const mesh = new THREE.Mesh(
- //     new THREE.IcosahedronBufferGeometry(radius, 2),
- //     new THREE.MeshStandardMaterial({ flatShading: true })
- //   );
- //   mesh.position.set(0, 0, -20);
- //   scene.add(mesh);
-;
+parcelHelpers.export(exports, "TestBox", ()=>TestBox);
 var _three = require("three");
 class TestBox {
     constructor(scene){
@@ -30091,19 +30084,15 @@ class TestBox {
             color: 0x00ffff
         });
         const cube = new _three.Mesh(geometry, material);
-        cube.position.set(-20, 2, -20);
+        cube.position.set(-20, 4, -20);
         cube.castShadow = true;
         scene.add(cube);
-        //omg round boi for the MC
-        // const geom2 = new RoundedBoxGeometry(3, 3, 3, 4, 0.5);
-        // const cube2 = new THREE.Mesh(geom2, material);
-        // cube2.position.set(10, 1.5, 10);
-        // scene.add(cube2);
         this.update = function(time) {
-            const scale = Math.sin(time) + 2;
-            cube.scale.set(scale, scale, scale);
-            cube.rotation.x += 0.001;
-            cube.rotation.y += 0.001;
+        //idle animation, ignore for now because of colision
+        // const scale = Math.sin(time) + 1.5;
+        // cube.scale.set(scale, scale, scale);
+        // cube.rotation.x += 0.001;
+        // cube.rotation.y += 0.001;
         };
     }
 }
@@ -30115,7 +30104,7 @@ parcelHelpers.export(exports, "Plane", ()=>Plane);
 var _three = require("three");
 class Plane {
     constructor(scene){
-        const geometry = new _three.PlaneGeometry(300, 300, 1, 1);
+        const geometry = new _three.PlaneGeometry(360, 360, 1, 1);
         const material = new _three.MeshPhongMaterial({
             color: 0xffffff
         });
@@ -30147,7 +30136,7 @@ class Character {
         this.height;
         this.width;
         //make this smaller if i create edge elements
-        let halfPlane = 120;
+        let halfPlane = 110;
         modelLoader.load("robot.gltf", (function(gltf) {
             this.model = gltf.scene;
             this.model.traverse(function(child) {
@@ -32597,27 +32586,32 @@ var _randomNegativeJs = require("../../functions/randomNegative.js");
 class Pyramids {
     constructor(scene){
         const min = 120;
-        const max = 150;
+        const max = 180;
         const geometry = new _three.ConeGeometry(0.5, 1, 3);
         const material = new _three.MeshMatcapMaterial({
             color: 0x333333
         });
-        for(let i = 0; i < 60; i++){
+        for(let i = 0; i < 120; i++){
             var cone = new _three.Mesh(geometry, material);
-            var size = (0, _randomIntervalJs.randomFromInterval)(10, 40);
+            cone.position.z = (0, _randomNegativeJs.randomNegative)(i * 1.5);
+            let posx = (0, _randomIntervalJs.randomFromInterval)(min, max);
+            cone.position.x = (0, _randomNegativeJs.randomNegative)(posx);
+            // prettier-ignore
+            if (posx > min + (max - min) / 2) var size = (0, _randomIntervalJs.randomFromInterval)(40, 60);
+            else var size = (0, _randomIntervalJs.randomFromInterval)(10, 45);
             cone.scale.set(size, size, size);
-            cone.position.x = (0, _randomNegativeJs.randomNegative)((0, _randomIntervalJs.randomFromInterval)(min, max));
-            cone.position.z = (0, _randomIntervalJs.randomFromInterval)(-max, max);
             cone.position.y = size / 2.0;
             // cone.castShadow = true;
             scene.add(cone);
         }
-        for(let i1 = 0; i1 < 60; i1++){
+        for(let i1 = 0; i1 < 120; i1++){
             var cone = new _three.Mesh(geometry, material);
-            var size = (0, _randomIntervalJs.randomFromInterval)(10, 40);
+            cone.position.x = (0, _randomNegativeJs.randomNegative)(i1 * 1.5);
+            let posz = (0, _randomIntervalJs.randomFromInterval)(min, max);
+            cone.position.z = (0, _randomNegativeJs.randomNegative)(posz);
+            if (posz > min + (max - min) / 2) var size = (0, _randomIntervalJs.randomFromInterval)(40, 60);
+            else var size = (0, _randomIntervalJs.randomFromInterval)(10, 45);
             cone.scale.set(size, size, size);
-            cone.position.x = (0, _randomIntervalJs.randomFromInterval)(-max, max);
-            cone.position.z = (0, _randomNegativeJs.randomNegative)((0, _randomIntervalJs.randomFromInterval)(min, max));
             cone.position.y = size / 2.0;
             scene.add(cone);
         }

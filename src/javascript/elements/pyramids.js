@@ -5,27 +5,36 @@ import { randomNegative } from "../../functions/randomNegative.js";
 export class Pyramids {
   constructor(scene) {
     const min = 120;
-    const max = 150;
+    const max = 180;
     const geometry = new THREE.ConeGeometry(0.5, 1, 3);
     const material = new THREE.MeshMatcapMaterial({ color: 0x333333 });
 
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 120; i++) {
       var cone = new THREE.Mesh(geometry, material);
-      var size = randomFromInterval(10, 40);
+      cone.position.z = randomNegative(i * 1.5);
+      let posx = randomFromInterval(min, max);
+      cone.position.x = randomNegative(posx);
+      // prettier-ignore
+      if (posx > min+((max - min) / 2)) {
+        var size = randomFromInterval(40, 60);
+      } else var size = randomFromInterval(10, 45);
+
       cone.scale.set(size, size, size);
-      cone.position.x = randomNegative(randomFromInterval(min, max));
-      cone.position.z = randomFromInterval(-max, max);
       cone.position.y = size / 2.0;
       // cone.castShadow = true;
 
       scene.add(cone);
     }
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 120; i++) {
       var cone = new THREE.Mesh(geometry, material);
-      var size = randomFromInterval(10, 40);
+      cone.position.x = randomNegative(i * 1.5);
+      let posz = randomFromInterval(min, max);
+      cone.position.z = randomNegative(posz);
+      if (posz > min + (max - min) / 2) {
+        var size = randomFromInterval(40, 60);
+      } else var size = randomFromInterval(10, 45);
+
       cone.scale.set(size, size, size);
-      cone.position.x = randomFromInterval(-max, max);
-      cone.position.z = randomNegative(randomFromInterval(min, max));
       cone.position.y = size / 2.0;
 
       scene.add(cone);

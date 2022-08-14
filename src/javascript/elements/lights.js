@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export class Light {
   constructor(scene) {
-    let halfPlane = 150;
+    let halfPlane = 130;
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
