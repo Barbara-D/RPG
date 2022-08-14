@@ -3,15 +3,15 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 export class Character {
   constructor(scene) {
-    var modelLoader = new GLTFLoader();
+    var modelLoader = new GLTFLoader().setPath("resources/models/");
     this.model;
     this.height;
     this.width;
     //make this smaller if i create edge elements
-    let halfPlane = 150;
+    let halfPlane = 120;
 
     modelLoader.load(
-      "../../resources/models/robot.gltf",
+      "robot.gltf",
       function (gltf) {
         this.model = gltf.scene;
         this.model.traverse(function (child) {
@@ -25,16 +25,30 @@ export class Character {
 
         this.model.position.set(0, 4, 0);
         scene.add(this.model);
-        var boundingBox = new THREE.Box3().setFromObject(this.model);
-        this.height = boundingBox.getSize().y;
-        this.width = boundingBox.getSize().x;
-      }.bind(this)
+      }.bind(this),
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      // called when loading has errors
+      function (error) {
+        console.log("An error happened");
+      }
     );
+
+    // var boundingBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+    // boundingBox.setFromObject(this.model);
+    // console.log(boundingBox);
+    // this.height = boundingBox.getSize().y;
+    // this.width = boundingBox.getSize().x;
 
     // sine wave animation
     this.update = function (time) {
-      const posy = Math.sin(time) + 3.5;
-      this.model.position.y = posy;
+      if (this.model != undefined) {
+        const posy = Math.sin(time) + 3.5;
+        this.model.position.y = posy;
+        const boundingBox = new THREE.Box3().setFromObject(this.model);
+        // console.log(boundingBox);
+      }
     };
 
     //controls
@@ -46,7 +60,7 @@ export class Character {
         camera.lookAt(this.model.position);
         camera.position.z = this.model.position.z + 20;
         camera.position.x = this.model.position.x + 20;
-        camera.position.y = 34;
+        camera.position.y = 30;
       }
       //s on keyboard, backwards
       if (keyMap[83] && this.model.position.z < halfPlane) {
@@ -55,7 +69,7 @@ export class Character {
         camera.lookAt(this.model.position);
         camera.position.z = this.model.position.z + 20;
         camera.position.x = this.model.position.x + 20;
-        camera.position.y = 34;
+        camera.position.y = 30;
       }
       //a on keyboard, left
       if (keyMap[65] && this.model.position.x > -halfPlane) {
@@ -64,7 +78,7 @@ export class Character {
         camera.lookAt(this.model.position);
         camera.position.x = this.model.position.x + 20;
         camera.position.z = this.model.position.z + 20;
-        camera.position.y = 34;
+        camera.position.y = 30;
       }
       //d on keyboard, right
       if (keyMap[68] && this.model.position.x < halfPlane) {
@@ -73,7 +87,7 @@ export class Character {
         camera.lookAt(this.model.position);
         camera.position.x = this.model.position.x + 20;
         camera.position.z = this.model.position.z + 20;
-        camera.position.y = 34;
+        camera.position.y = 30;
       }
     };
   }

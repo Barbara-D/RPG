@@ -4,7 +4,7 @@ export class Light {
   constructor(scene) {
     let halfPlane = 150;
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
     directionalLight.position.set(0, 40, 0);
@@ -27,11 +27,11 @@ export class Light {
     // const pointLight = new THREE.PointLight(0xffffff, 0.4);
     // scene.add(pointLight);
 
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
-    hemiLight.color.setHSL(0.6, 1, 0.6);
-    hemiLight.groundColor.setHSL(0.095, 1, 0.75);
-    hemiLight.position.set(0, 50, 0);
-    scene.add(hemiLight);
+    // const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
+    // hemiLight.color.setHSL(0.6, 1, 0.6);
+    // hemiLight.groundColor.setHSL(0.095, 1, 0.75);
+    // hemiLight.position.set(0, 50, 0);
+    // scene.add(hemiLight);
 
     //can just leave function empty if we don't want any changes overtime
     this.update = function (time) {

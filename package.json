@@ -103,7 +103,7 @@
     "yaml": "^1.10.2"
   },
   "staticFiles": {
-    "staticPath": "src/resources",
+    "staticPath": "src/javascript/elements/resources",
     "staticOutPath": "resources"
   },
   "repository": {

@@ -3,7 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Light } from "./elements/lights.js";
 import { TestBox } from "./elements/box.js";
 import { Plane } from "./elements/plane.js";
-import { Hare } from "./elements/hare.js";
+import { Pyramids } from "./elements/pyramids.js";
 import { Character } from "./elements/character.js";
 
 export function SceneManager(canvas) {
@@ -23,7 +23,7 @@ export function SceneManager(canvas) {
   const dynamicSubjects = [];
   const sceneSubjects = createSceneSubjects(scene);
   var keyMap = [];
-  var theCharacter, theLight, thePlane, theTestBox;
+  var theCharacter, theLight, thePlane, theTestBox, thePyramids;
 
   //create a new scene with a function
   function buildScene() {
@@ -85,13 +85,14 @@ export function SceneManager(canvas) {
     theLight = new Light(scene);
     theTestBox = new TestBox(scene);
     thePlane = new Plane(scene);
-    // theHare = new Hare(scene);
+    thePyramids = new Pyramids(scene);
+
     const sceneSubjects = [
       theCharacter,
       theLight,
       theTestBox,
       thePlane,
-      // theHare,
+      thePyramids,
     ];
     dynamicSubjects.push(theCharacter);
     return sceneSubjects;

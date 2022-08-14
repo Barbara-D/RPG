@@ -574,7 +574,7 @@ var _orbitControlsJs = require("three/examples/jsm/controls/OrbitControls.js");
 var _lightsJs = require("./elements/lights.js");
 var _boxJs = require("./elements/box.js");
 var _planeJs = require("./elements/plane.js");
-var _hareJs = require("./elements/hare.js");
+var _pyramidsJs = require("./elements/pyramids.js");
 var _characterJs = require("./elements/character.js");
 function SceneManager(canvas) {
     const clock = new _three.Clock();
@@ -590,7 +590,7 @@ function SceneManager(canvas) {
     const dynamicSubjects = [];
     const sceneSubjects1 = createSceneSubjects(scene1);
     var keyMap = [];
-    var theCharacter, theLight, thePlane, theTestBox;
+    var theCharacter, theLight, thePlane, theTestBox, thePyramids;
     //create a new scene with a function
     function buildScene() {
         const scene = new _three.Scene();
@@ -637,12 +637,13 @@ function SceneManager(canvas) {
         theLight = new (0, _lightsJs.Light)(scene);
         theTestBox = new (0, _boxJs.TestBox)(scene);
         thePlane = new (0, _planeJs.Plane)(scene);
-        // theHare = new Hare(scene);
+        thePyramids = new (0, _pyramidsJs.Pyramids)(scene);
         const sceneSubjects = [
             theCharacter,
             theLight,
             theTestBox,
-            thePlane, 
+            thePlane,
+            thePyramids, 
         ];
         dynamicSubjects.push(theCharacter);
         return sceneSubjects;
@@ -669,7 +670,7 @@ function SceneManager(canvas) {
     };
 }
 
-},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/box.js":"3Zrf3","./elements/plane.js":"i6Syt","./elements/hare.js":"bk6T7","./elements/character.js":"7JrJ2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/box.js":"3Zrf3","./elements/plane.js":"i6Syt","./elements/character.js":"7JrJ2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./elements/pyramids.js":"gA6wQ"}],"ktPTu":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ACESFilmicToneMapping", ()=>ACESFilmicToneMapping);
@@ -30040,7 +30041,7 @@ var _three = require("three");
 class Light {
     constructor(scene){
         let halfPlane = 150;
-        const ambientLight = new _three.AmbientLight(0xffffff, 0.55);
+        const ambientLight = new _three.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
         const directionalLight = new _three.DirectionalLight(0xffffff, 1.0);
         directionalLight.position.set(0, 40, 0);
@@ -30058,11 +30059,11 @@ class Light {
         scene.add(new _three.CameraHelper(directionalLight.shadow.camera));
         // const pointLight = new THREE.PointLight(0xffffff, 0.4);
         // scene.add(pointLight);
-        const hemiLight = new _three.HemisphereLight(0xffffff, 0xffffff, 0.5);
-        hemiLight.color.setHSL(0.6, 1, 0.6);
-        hemiLight.groundColor.setHSL(0.095, 1, 0.75);
-        hemiLight.position.set(0, 50, 0);
-        scene.add(hemiLight);
+        // const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
+        // hemiLight.color.setHSL(0.6, 1, 0.6);
+        // hemiLight.groundColor.setHSL(0.095, 1, 0.75);
+        // hemiLight.position.set(0, 50, 0);
+        // scene.add(hemiLight);
         //can just leave function empty if we don't want any changes overtime
         this.update = function(time) {
         // pointLight.intensity = (Math.sin(time) + 1.5) / 1.5;
@@ -30083,7 +30084,6 @@ parcelHelpers.export(exports, "TestBox", ()=>TestBox) //   const radius = 2;
  //   scene.add(mesh);
 ;
 var _three = require("three");
-var _roundedBoxGeometryJs = require("three/examples/jsm/geometries/RoundedBoxGeometry.js");
 class TestBox {
     constructor(scene){
         const geometry = new _three.BoxGeometry(2, 2, 2);
@@ -30108,112 +30108,6 @@ class TestBox {
     }
 }
 
-},{"three":"ktPTu","three/examples/jsm/geometries/RoundedBoxGeometry.js":"fkhM2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fkhM2":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "RoundedBoxGeometry", ()=>RoundedBoxGeometry);
-var _three = require("three");
-const _tempNormal = new (0, _three.Vector3)();
-function getUv(faceDirVector, normal, uvAxis, projectionAxis, radius, sideLength) {
-    const totArcLength = 2 * Math.PI * radius / 4;
-    // length of the planes between the arcs on each axis
-    const centerLength = Math.max(sideLength - 2 * radius, 0);
-    const halfArc = Math.PI / 4;
-    // Get the vector projected onto the Y plane
-    _tempNormal.copy(normal);
-    _tempNormal[projectionAxis] = 0;
-    _tempNormal.normalize();
-    // total amount of UV space alloted to a single arc
-    const arcUvRatio = 0.5 * totArcLength / (totArcLength + centerLength);
-    // the distance along one arc the point is at
-    const arcAngleRatio = 1.0 - _tempNormal.angleTo(faceDirVector) / halfArc;
-    if (Math.sign(_tempNormal[uvAxis]) === 1) return arcAngleRatio * arcUvRatio;
-    else {
-        // total amount of UV space alloted to the plane between the arcs
-        const lenUv = centerLength / (totArcLength + centerLength);
-        return lenUv + arcUvRatio + arcUvRatio * (1.0 - arcAngleRatio);
-    }
-}
-class RoundedBoxGeometry extends (0, _three.BoxGeometry) {
-    constructor(width = 1, height = 1, depth = 1, segments = 2, radius = 0.1){
-        // ensure segments is odd so we have a plane connecting the rounded corners
-        segments = segments * 2 + 1;
-        // ensure radius isn't bigger than shortest side
-        radius = Math.min(width / 2, height / 2, depth / 2, radius);
-        super(1, 1, 1, segments, segments, segments);
-        // if we just have one segment we're the same as a regular box
-        if (segments === 1) return;
-        const geometry2 = this.toNonIndexed();
-        this.index = null;
-        this.attributes.position = geometry2.attributes.position;
-        this.attributes.normal = geometry2.attributes.normal;
-        this.attributes.uv = geometry2.attributes.uv;
-        //
-        const position = new (0, _three.Vector3)();
-        const normal = new (0, _three.Vector3)();
-        const box = new (0, _three.Vector3)(width, height, depth).divideScalar(2).subScalar(radius);
-        const positions = this.attributes.position.array;
-        const normals = this.attributes.normal.array;
-        const uvs = this.attributes.uv.array;
-        const faceTris = positions.length / 6;
-        const faceDirVector = new (0, _three.Vector3)();
-        const halfSegmentSize = 0.5 / segments;
-        for(let i = 0, j = 0; i < positions.length; i += 3, j += 2){
-            position.fromArray(positions, i);
-            normal.copy(position);
-            normal.x -= Math.sign(normal.x) * halfSegmentSize;
-            normal.y -= Math.sign(normal.y) * halfSegmentSize;
-            normal.z -= Math.sign(normal.z) * halfSegmentSize;
-            normal.normalize();
-            positions[i + 0] = box.x * Math.sign(position.x) + normal.x * radius;
-            positions[i + 1] = box.y * Math.sign(position.y) + normal.y * radius;
-            positions[i + 2] = box.z * Math.sign(position.z) + normal.z * radius;
-            normals[i + 0] = normal.x;
-            normals[i + 1] = normal.y;
-            normals[i + 2] = normal.z;
-            const side = Math.floor(i / faceTris);
-            switch(side){
-                case 0:
-                    // generate UVs along Z then Y
-                    faceDirVector.set(1, 0, 0);
-                    uvs[j + 0] = getUv(faceDirVector, normal, "z", "y", radius, depth);
-                    uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, "y", "z", radius, height);
-                    break;
-                case 1:
-                    // generate UVs along Z then Y
-                    faceDirVector.set(-1, 0, 0);
-                    uvs[j + 0] = 1.0 - getUv(faceDirVector, normal, "z", "y", radius, depth);
-                    uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, "y", "z", radius, height);
-                    break;
-                case 2:
-                    // generate UVs along X then Z
-                    faceDirVector.set(0, 1, 0);
-                    uvs[j + 0] = 1.0 - getUv(faceDirVector, normal, "x", "z", radius, width);
-                    uvs[j + 1] = getUv(faceDirVector, normal, "z", "x", radius, depth);
-                    break;
-                case 3:
-                    // generate UVs along X then Z
-                    faceDirVector.set(0, -1, 0);
-                    uvs[j + 0] = 1.0 - getUv(faceDirVector, normal, "x", "z", radius, width);
-                    uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, "z", "x", radius, depth);
-                    break;
-                case 4:
-                    // generate UVs along X then Y
-                    faceDirVector.set(0, 0, 1);
-                    uvs[j + 0] = 1.0 - getUv(faceDirVector, normal, "x", "y", radius, width);
-                    uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, "y", "x", radius, height);
-                    break;
-                case 5:
-                    // generate UVs along X then Y
-                    faceDirVector.set(0, 0, -1);
-                    uvs[j + 0] = getUv(faceDirVector, normal, "x", "y", radius, width);
-                    uvs[j + 1] = 1.0 - getUv(faceDirVector, normal, "y", "x", radius, height);
-                    break;
-            }
-        }
-    }
-}
-
 },{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i6Syt":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -30235,49 +30129,97 @@ class Plane {
     }
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bk6T7":[function(require,module,exports) {
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7JrJ2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Hare", ()=>Hare) // let example = new THREE.Object3D();
- // loader.load(objects.exampleGLTF, function (object) {
- //   example = object.scene;
- //   scene.add(example);
- // });
+parcelHelpers.export(exports, "Character", ()=>Character) //eventualno dodati ponasanja ako su stisnute dvije tipke istovremeno (al to je puno repetitivnih if-ova), a i ono, ne dodaje nes previse funkcionalnosti
+ //dodati ponasanje da ne moze izaci van granica scene, something like: V, but test it
+ //  if (keyMap[68] && this.model.position.x + this.width / 2 < camera.right) {
+ //    this.model.position.x += 5;
+ //  }
 ;
 var _three = require("three");
 var _gltfloader = require("three/examples/jsm/loaders/GLTFLoader");
-class Hare {
+class Character {
     constructor(scene){
-        const loader = new (0, _gltfloader.GLTFLoader)();
-        loader.load("../../resources/models/hare.gltf", function(gltf) {
-            gltf.scene.traverse(function(child) {
-                if (child.isMesh) {
-                    const m = child;
-                    // m.receiveShadow = true;
-                    m.castShadow = true;
-                }
+        var modelLoader = new (0, _gltfloader.GLTFLoader)().setPath("resources/models/");
+        this.model;
+        this.height;
+        this.width;
+        //make this smaller if i create edge elements
+        let halfPlane = 120;
+        modelLoader.load("robot.gltf", (function(gltf) {
+            this.model = gltf.scene;
+            this.model.traverse(function(child) {
+                if (child.isMesh) child.castShadow = true;
             });
-            var scale = 0.02;
-            const hare = gltf.scene;
-            hare.scale.set(scale, scale, scale);
-            hare.position.set(15, 0, 15);
-            scene.add(gltf.scene);
-        }, function(xhr) {
+            var scale = 0.025;
+            this.model.scale.set(scale, scale, scale);
+            this.model.position.set(0, 4, 0);
+            scene.add(this.model);
+        }).bind(this), function(xhr) {
             console.log(xhr.loaded / xhr.total * 100 + "% loaded");
         }, // called when loading has errors
         function(error) {
-            console.log("An error happened" + error);
+            console.log("An error happened");
         });
+        // var boundingBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+        // boundingBox.setFromObject(this.model);
+        // console.log(boundingBox);
+        // this.height = boundingBox.getSize().y;
+        // this.width = boundingBox.getSize().x;
+        // sine wave animation
         this.update = function(time) {
-        //   const scale = Math.sin(time) + 2;
-        //   cube.scale.set(scale, scale, scale);
-        //   hare.rotation.x += 0.001;
-        //   cube.rotation.y += 0.001;
+            if (this.model != undefined) {
+                const posy = Math.sin(time) + 3.5;
+                this.model.position.y = posy;
+                const boundingBox = new _three.Box3().setFromObject(this.model);
+            // console.log(boundingBox);
+            }
+        };
+        //controls
+        this.handleInput = function(keyMap, camera) {
+            //w on keyboard, forwards
+            if (keyMap[87] && this.model.position.z > -halfPlane) {
+                this.model.position.z -= 1;
+                this.model.rotation.y = Math.PI;
+                camera.lookAt(this.model.position);
+                camera.position.z = this.model.position.z + 20;
+                camera.position.x = this.model.position.x + 20;
+                camera.position.y = 30;
+            }
+            //s on keyboard, backwards
+            if (keyMap[83] && this.model.position.z < halfPlane) {
+                this.model.position.z += 1;
+                this.model.rotation.y = 0;
+                camera.lookAt(this.model.position);
+                camera.position.z = this.model.position.z + 20;
+                camera.position.x = this.model.position.x + 20;
+                camera.position.y = 30;
+            }
+            //a on keyboard, left
+            if (keyMap[65] && this.model.position.x > -halfPlane) {
+                this.model.position.x -= 1;
+                this.model.rotation.y = -Math.PI / 2;
+                camera.lookAt(this.model.position);
+                camera.position.x = this.model.position.x + 20;
+                camera.position.z = this.model.position.z + 20;
+                camera.position.y = 30;
+            }
+            //d on keyboard, right
+            if (keyMap[68] && this.model.position.x < halfPlane) {
+                this.model.position.x += 1;
+                this.model.rotation.y = Math.PI / 2;
+                camera.lookAt(this.model.position);
+                camera.position.x = this.model.position.x + 20;
+                camera.position.z = this.model.position.z + 20;
+                camera.position.y = 30;
+            }
         };
     }
 }
 
-},{"three":"ktPTu","three/examples/jsm/loaders/GLTFLoader":"dVRsF","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dVRsF":[function(require,module,exports) {
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three/examples/jsm/loaders/GLTFLoader":"dVRsF"}],"dVRsF":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "GLTFLoader", ()=>GLTFLoader);
@@ -32643,85 +32585,71 @@ function buildNodeHierarchy(nodeId, parentObject, json, parser) {
     return newGeometry;
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7JrJ2":[function(require,module,exports) {
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gA6wQ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Character", ()=>Character) //eventualno dodati ponasanja ako su stisnute dvije tipke istovremeno (al to je puno repetitivnih if-ova), a i ono, ne dodaje nes previse funkcionalnosti
- //dodati ponasanje da ne moze izaci van granica scene, something like: V, but test it
- //  if (keyMap[68] && this.model.position.x + this.width / 2 < camera.right) {
- //    this.model.position.x += 5;
- //  }
+parcelHelpers.export(exports, "Pyramids", ()=>Pyramids) //x je random broj između 150 i 120, s tim da može biti + ili -
+ //isto za z
 ;
 var _three = require("three");
-var _gltfloader = require("three/examples/jsm/loaders/GLTFLoader");
-class Character {
+var _randomIntervalJs = require("../../functions/randomInterval.js");
+var _randomNegativeJs = require("../../functions/randomNegative.js");
+class Pyramids {
     constructor(scene){
-        var modelLoader = new (0, _gltfloader.GLTFLoader)();
-        this.model;
-        this.height;
-        this.width;
-        //make this smaller if i create edge elements
-        let halfPlane = 150;
-        modelLoader.load("../../resources/models/robot.gltf", (function(gltf) {
-            this.model = gltf.scene;
-            this.model.traverse(function(child) {
-                if (child.isMesh) child.castShadow = true;
-            });
-            var scale = 0.025;
-            this.model.scale.set(scale, scale, scale);
-            this.model.position.set(0, 4, 0);
-            scene.add(this.model);
-            var boundingBox = new _three.Box3().setFromObject(this.model);
-            this.height = boundingBox.getSize().y;
-            this.width = boundingBox.getSize().x;
-        }).bind(this));
-        // sine wave animation
-        this.update = function(time) {
-            const posy = Math.sin(time) + 3.5;
-            this.model.position.y = posy;
-        };
-        //controls
-        this.handleInput = function(keyMap, camera) {
-            //w on keyboard, forwards
-            if (keyMap[87] && this.model.position.z > -halfPlane) {
-                this.model.position.z -= 1;
-                this.model.rotation.y = Math.PI;
-                camera.lookAt(this.model.position);
-                camera.position.z = this.model.position.z + 20;
-                camera.position.x = this.model.position.x + 20;
-                camera.position.y = 34;
-            }
-            //s on keyboard, backwards
-            if (keyMap[83] && this.model.position.z < halfPlane) {
-                this.model.position.z += 1;
-                this.model.rotation.y = 0;
-                camera.lookAt(this.model.position);
-                camera.position.z = this.model.position.z + 20;
-                camera.position.x = this.model.position.x + 20;
-                camera.position.y = 34;
-            }
-            //a on keyboard, left
-            if (keyMap[65] && this.model.position.x > -halfPlane) {
-                this.model.position.x -= 1;
-                this.model.rotation.y = -Math.PI / 2;
-                camera.lookAt(this.model.position);
-                camera.position.x = this.model.position.x + 20;
-                camera.position.z = this.model.position.z + 20;
-                camera.position.y = 34;
-            }
-            //d on keyboard, right
-            if (keyMap[68] && this.model.position.x < halfPlane) {
-                this.model.position.x += 1;
-                this.model.rotation.y = Math.PI / 2;
-                camera.lookAt(this.model.position);
-                camera.position.x = this.model.position.x + 20;
-                camera.position.z = this.model.position.z + 20;
-                camera.position.y = 34;
-            }
-        };
+        const min = 120;
+        const max = 150;
+        const geometry = new _three.ConeGeometry(0.5, 1, 3);
+        const material = new _three.MeshMatcapMaterial({
+            color: 0x333333
+        });
+        for(let i = 0; i < 60; i++){
+            var cone = new _three.Mesh(geometry, material);
+            var size = (0, _randomIntervalJs.randomFromInterval)(10, 40);
+            cone.scale.set(size, size, size);
+            cone.position.x = (0, _randomNegativeJs.randomNegative)((0, _randomIntervalJs.randomFromInterval)(min, max));
+            cone.position.z = (0, _randomIntervalJs.randomFromInterval)(-max, max);
+            cone.position.y = size / 2.0;
+            // cone.castShadow = true;
+            scene.add(cone);
+        }
+        for(let i1 = 0; i1 < 60; i1++){
+            var cone = new _three.Mesh(geometry, material);
+            var size = (0, _randomIntervalJs.randomFromInterval)(10, 40);
+            cone.scale.set(size, size, size);
+            cone.position.x = (0, _randomIntervalJs.randomFromInterval)(-max, max);
+            cone.position.z = (0, _randomNegativeJs.randomNegative)((0, _randomIntervalJs.randomFromInterval)(min, max));
+            cone.position.y = size / 2.0;
+            scene.add(cone);
+        }
+        // cone.position.set(20, 10, 20);
+        // cone.castShadow = true;
+        // cone.receiveShadow = true;
+        this.update = function(time) {};
     }
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three/examples/jsm/loaders/GLTFLoader":"dVRsF"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../../functions/randomInterval.js":"7MwAC","../../functions/randomNegative.js":"2RDzt"}],"7MwAC":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "randomFromInterval", ()=>randomFromInterval);
+function randomFromInterval(min, max) {
+    let result = Math.floor(Math.random() * (max - min + 1) + min);
+    return result;
+//just an example
+//to use :
+//  import { f1 } from "./file1.js";
+//  f1();
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2RDzt":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "randomNegative", ()=>randomNegative);
+function randomNegative(number) {
+    if (Math.random() > 0.5) return number;
+    else return -number;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
 
 //# sourceMappingURL=index.975ef6c8.js.map
