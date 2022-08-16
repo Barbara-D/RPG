@@ -30117,7 +30117,7 @@ class Plane {
         texture = new _three.TextureLoader().load("resources/images/tex4.jpg");
         texture.wrapS = _three.RepeatWrapping;
         texture.wrapT = _three.RepeatWrapping;
-        texture.repeat.set(10, 10);
+        texture.repeat.set(14, 14);
         const geometry = new _three.PlaneGeometry(size, size, 1, 1);
         const material = new _three.MeshLambertMaterial({
             map: texture
@@ -32689,34 +32689,47 @@ class Enemies {
 },{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"UNYeq":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+//znaci collision ova funkcija provjerava za sve enemies
+//a kad je battle onda je s jednim specificnim enemy
 //mogu ih nazvati enemies.enemy1 enemy2 itd
 //check hw to handle colision after removing enemy
 parcelHelpers.export(exports, "CheckCollision", ()=>CheckCollision);
 var _three = require("three");
+var _battleLogicJs = require("./battleLogic.js");
 function CheckCollision(character, enemies, battle, scene) {
-    if (character.model && enemies.enemy) {
+    if (character.model && !("consumed" in enemies.enemy.userData)) {
+        let color = "cyan";
         let characterBB = new _three.Box3().setFromObject(character.model);
         let enemyBB = new _three.Box3().setFromObject(enemies.enemy);
         if (characterBB.intersectsBox(enemyBB)) {
-            battle.classList.remove("inactive");
-            battle.classList.add("active");
-            scene.remove(enemies.enemy);
-            enemies.enemy.userData.consumed = true;
-            enemies.enemy = null;
-            battle.onclick = function(e) {
-                console.log("clicked");
-                e.target.classList.add("inactive");
-                e.target.classList.remove("active");
-                return false;
-            };
-            return true;
-        } else // battle.classList.add("inactive");
-        // battle.classList.remove("active");
-        return false;
-    } else return false;
+            (0, _battleLogicJs.Fight)(battle, character, enemies.enemy, color, scene);
+            return false;
+        }
+        return true;
+    } else // battle.classList.add("inactive");
+    // battle.classList.remove("active");
+    return false;
 //   return [character, enemies];
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three":"ktPTu"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three":"ktPTu","./battleLogic.js":"3A8mc"}],"3A8mc":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Fight", ()=>Fight);
+function Fight(battle, character, enemy, enemyColor, scene) {
+    battle.classList.remove("inactive");
+    battle.classList.add("active");
+    battle.onclick = function(e) {
+        console.log("clicked");
+        battle.classList.add("inactive");
+        battle.classList.remove("active");
+        scene.remove(enemy);
+        enemy.userData.consumed = true;
+        enemy = null;
+    //potentially some confirmation text, XP something
+    };
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
 
 //# sourceMappingURL=index.975ef6c8.js.map
