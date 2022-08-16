@@ -9,7 +9,7 @@ export class Plane {
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
 
-    texture.repeat.set(10, 10);
+    texture.repeat.set(14, 14);
 
     const geometry = new THREE.PlaneGeometry(size, size, 1, 1);
     const material = new THREE.MeshLambertMaterial({ map: texture });

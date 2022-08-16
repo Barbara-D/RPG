@@ -20,22 +20,87 @@ html {
   position: absolute;
   z-index: 1;
 }
-#battle {
-  position: relative;
-  height: min-content;
-  width: min-content;
-  z-index: 2;
-  margin: auto;
-  top: 50%;
-
-  padding: 10px;
-  background-color: #44464a;
-  color: #c1c3c5;
-  font-size: 5em;
-}
 .active {
   visibility: visible;
 }
 .inactive {
   visibility: hidden;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+#battle {
+  position: relative;
+  height: min-content;
+  width: max-content;
+  z-index: 2;
+  margin: auto;
+  top: 20%;
+
+  padding: 30px 40px;
+  background-color: #44464a;
+  color: #c1c3c5;
+}
+#battle p {
+  font-size: 1em;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  text-align: right;
+}
+h1 {
+  font-size: 2em;
+  padding: 15px 15px;
+}
+#hp_bar {
+  background-color: #c1c3c5;
+  padding: 8px;
+}
+
+#hp_green {
+  background-color: #95ad91;
+  padding: 10px;
+  width: 80%;
+}
+.action {
+  padding: 8px 35px 8px 15px;
+  margin: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
+  background-color: #65686c;
+  font-size: 1.5em;
+}
+.circle_bg {
+  width: 45px;
+  height: 45px;
+  background-color: #c1c3c5;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.circle_small {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+.cyan {
+  background-color: #91abad;
+}
+.magenta {
+  background-color: #a791ad;
+}
+.yellow {
+  background-color: #adaa91;
+}
+.key {
+  background-color: #2d2d2d;
+}
+.defend {
+  background-image: url(javascript/elements/resources/images/shield.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
 }
