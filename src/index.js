@@ -2,8 +2,9 @@ import { SceneManager } from "./javascript/application.js";
 
 //access the div from index.html
 const overworld = document.getElementById("overworld");
+const battle = document.getElementById("battle");
 //create new instance of scene manager
-const sceneManager = new SceneManager(overworld);
+const sceneManager = new SceneManager(overworld, battle);
 
 bindEventListeners();
 render();
@@ -33,6 +34,8 @@ function handleKeyUp(event) {
   var keyCode = event.which;
   sceneManager.handleInput(keyCode, false);
 }
+
+//function that runs with each frame change
 function render() {
   requestAnimationFrame(render);
   sceneManager.update();

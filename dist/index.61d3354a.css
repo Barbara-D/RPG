@@ -6,11 +6,37 @@
 body, html {
   width: 100%;
   height: 100%;
-  background: linear-gradient(#aacdf7, #e4e0ba);
+  background: url("bg.6e69d989.jpg") 0 0 / cover no-repeat;
   position: fixed;
   top: 0;
   left: 0;
   overflow: hidden;
+}
+
+#overworld {
+  z-index: 1;
+  position: absolute;
+}
+
+#battle {
+  height: min-content;
+  width: min-content;
+  z-index: 2;
+  color: #c1c3c5;
+  background-color: #44464a;
+  margin: auto;
+  padding: 10px;
+  font-size: 5em;
+  position: relative;
+  top: 50%;
+}
+
+.active {
+  visibility: visible;
+}
+
+.inactive {
+  visibility: hidden;
 }
 
 /*# sourceMappingURL=index.61d3354a.css.map */

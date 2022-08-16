@@ -4,11 +4,11 @@ export class Light {
   constructor(scene) {
     let halfPlane = 130;
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
     scene.add(ambientLight);
+
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
     directionalLight.position.set(0, 40, 0);
-    directionalLight.target.position.set(0, 0, 0);
 
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 2048;

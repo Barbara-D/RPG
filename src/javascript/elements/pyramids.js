@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { randomFromInterval } from "../../functions/randomInterval.js";
-import { randomNegative } from "../../functions/randomNegative.js";
+import { randomFromInterval } from "../functions/randomInterval.js";
+import { randomNegative } from "../functions/randomNegative.js";
 
 export class Pyramids {
   constructor(scene) {

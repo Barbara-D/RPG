@@ -5,8 +5,10 @@ import { TestBox } from "./elements/box.js";
 import { Plane } from "./elements/plane.js";
 import { Pyramids } from "./elements/pyramids.js";
 import { Character } from "./elements/character.js";
+import { Enemies } from "./elements/enemies.js";
+import { CheckCollision } from "./functions/checkCollision.js";
 
-export function SceneManager(canvas) {
+export function SceneManager(canvas, battle) {
   const clock = new THREE.Clock();
 
   const screenDimensions = {
@@ -23,7 +25,7 @@ export function SceneManager(canvas) {
   const dynamicSubjects = [];
   const sceneSubjects = createSceneSubjects(scene);
   var keyMap = [];
-  var theCharacter, theLight, thePlane, theTestBox, thePyramids;
+  var theCharacter, theLight, thePlane, theTestBox, thePyramids, theEnemies;
 
   //create a new scene with a function
   function buildScene() {
@@ -79,20 +81,22 @@ export function SceneManager(canvas) {
     return controls;
   }
 
-  //creates an array of scene subjects
   function createSceneSubjects(scene) {
     theCharacter = new Character(scene);
     theLight = new Light(scene);
     theTestBox = new TestBox(scene);
     thePlane = new Plane(scene);
     thePyramids = new Pyramids(scene);
+    theEnemies = new Enemies(scene);
 
+    //creates an array of just defined scene subjects
     const sceneSubjects = [
       theCharacter,
       theLight,
       theTestBox,
       thePlane,
       thePyramids,
+      theEnemies,
     ];
     dynamicSubjects.push(theCharacter);
     return sceneSubjects;
@@ -106,7 +110,14 @@ export function SceneManager(canvas) {
 
     for (let i = 0; i < sceneSubjects.length; i++)
       sceneSubjects[i].update(elapsedTime);
+
+    //collisions also checked in update function
+    //so as things are now, when its colliding, you cannot
+    let collide = CheckCollision(theCharacter, theEnemies, battle, scene);
+
+    //tu nekakav if od battle koji ce blokirati input
     theCharacter.handleInput(keyMap, camera);
+
     renderer.render(scene, camera);
   };
 

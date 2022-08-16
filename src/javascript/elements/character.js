@@ -46,7 +46,7 @@ export class Character {
       if (this.model != undefined) {
         const posy = Math.sin(time) + 3.5;
         this.model.position.y = posy;
-        const boundingBox = new THREE.Box3().setFromObject(this.model);
+        // const boundingBox = new THREE.Box3().setFromObject(this.model);
         // console.log(boundingBox);
       }
     };

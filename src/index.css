@@ -11,5 +11,31 @@ html {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(#aacdf7, #e4e0ba);
+  background: linear-gradient(#4d606d, #aacdf7);
+  background-image: url("javascript/elements/resources/images/bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+#overworld {
+  position: absolute;
+  z-index: 1;
+}
+#battle {
+  position: relative;
+  height: min-content;
+  width: min-content;
+  z-index: 2;
+  margin: auto;
+  top: 50%;
+
+  padding: 10px;
+  background-color: #44464a;
+  color: #c1c3c5;
+  font-size: 5em;
+}
+.active {
+  visibility: visible;
+}
+.inactive {
+  visibility: hidden;
 }

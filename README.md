@@ -15,3 +15,5 @@ Publish directly to GitHub pages:
 ```bash
 npm run deploy
 ```
+
+[Deployment link](https://barbara-d.github.io/RPG/)
