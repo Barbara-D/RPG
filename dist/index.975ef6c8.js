@@ -535,8 +535,9 @@ function hmrAcceptRun(bundle, id) {
 var _applicationJs = require("./javascript/application.js");
 //access the div from index.html
 const overworld = document.getElementById("overworld");
+const battle = document.getElementById("battle");
 //create new instance of scene manager
-const sceneManager = new (0, _applicationJs.SceneManager)(overworld);
+const sceneManager = new (0, _applicationJs.SceneManager)(overworld, battle);
 bindEventListeners();
 render();
 function bindEventListeners() {
@@ -560,6 +561,7 @@ function handleKeyUp(event) {
     var keyCode = event.which;
     sceneManager.handleInput(keyCode, false);
 }
+//function that runs with each frame change
 function render() {
     requestAnimationFrame(render);
     sceneManager.update();
@@ -576,7 +578,9 @@ var _boxJs = require("./elements/box.js");
 var _planeJs = require("./elements/plane.js");
 var _pyramidsJs = require("./elements/pyramids.js");
 var _characterJs = require("./elements/character.js");
-function SceneManager(canvas) {
+var _enemiesJs = require("./elements/enemies.js");
+var _checkCollisionJs = require("./functions/checkCollision.js");
+function SceneManager(canvas, battle) {
     const clock = new _three.Clock();
     const screenDimensions = {
         width: canvas.width,
@@ -590,7 +594,7 @@ function SceneManager(canvas) {
     const dynamicSubjects = [];
     const sceneSubjects1 = createSceneSubjects(scene1);
     var keyMap = [];
-    var theCharacter, theLight, thePlane, theTestBox, thePyramids;
+    var theCharacter, theLight, thePlane, theTestBox, thePyramids, theEnemies;
     //create a new scene with a function
     function buildScene() {
         const scene = new _three.Scene();
@@ -631,19 +635,21 @@ function SceneManager(canvas) {
         controls.update();
         return controls;
     }
-    //creates an array of scene subjects
     function createSceneSubjects(scene) {
         theCharacter = new (0, _characterJs.Character)(scene);
         theLight = new (0, _lightsJs.Light)(scene);
         theTestBox = new (0, _boxJs.TestBox)(scene);
         thePlane = new (0, _planeJs.Plane)(scene);
         thePyramids = new (0, _pyramidsJs.Pyramids)(scene);
+        theEnemies = new (0, _enemiesJs.Enemies)(scene);
+        //creates an array of just defined scene subjects
         const sceneSubjects = [
             theCharacter,
             theLight,
             theTestBox,
             thePlane,
-            thePyramids, 
+            thePyramids,
+            theEnemies, 
         ];
         dynamicSubjects.push(theCharacter);
         return sceneSubjects;
@@ -654,6 +660,10 @@ function SceneManager(canvas) {
     this.update = function() {
         const elapsedTime = clock.getElapsedTime();
         for(let i = 0; i < sceneSubjects1.length; i++)sceneSubjects1[i].update(elapsedTime);
+        //collisions also checked in update function
+        //so as things are now, when its colliding, you cannot
+        let collide = (0, _checkCollisionJs.CheckCollision)(theCharacter, theEnemies, battle, scene1);
+        //tu nekakav if od battle koji ce blokirati input
         theCharacter.handleInput(keyMap, camera1);
         renderer1.render(scene1, camera1);
     };
@@ -670,7 +680,7 @@ function SceneManager(canvas) {
     };
 }
 
-},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/box.js":"3Zrf3","./elements/plane.js":"i6Syt","./elements/character.js":"7JrJ2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./elements/pyramids.js":"gA6wQ"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/box.js":"3Zrf3","./elements/plane.js":"i6Syt","./elements/character.js":"7JrJ2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./elements/pyramids.js":"gA6wQ","./elements/enemies.js":"iqBn3","./functions/checkCollision.js":"UNYeq"}],"ktPTu":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ACESFilmicToneMapping", ()=>ACESFilmicToneMapping);
@@ -30041,11 +30051,10 @@ var _three = require("three");
 class Light {
     constructor(scene){
         let halfPlane = 130;
-        const ambientLight = new _three.AmbientLight(0xffffff, 1);
+        const ambientLight = new _three.AmbientLight(0xffffff, 0.75);
         scene.add(ambientLight);
         const directionalLight = new _three.DirectionalLight(0xffffff, 1.0);
         directionalLight.position.set(0, 40, 0);
-        directionalLight.target.position.set(0, 0, 0);
         directionalLight.castShadow = true;
         directionalLight.shadow.mapSize.width = 2048;
         directionalLight.shadow.mapSize.height = 2048;
@@ -30088,11 +30097,10 @@ class TestBox {
         cube.castShadow = true;
         scene.add(cube);
         this.update = function(time) {
-        //idle animation, ignore for now because of colision
-        // const scale = Math.sin(time) + 1.5;
-        // cube.scale.set(scale, scale, scale);
-        // cube.rotation.x += 0.001;
-        // cube.rotation.y += 0.001;
+            const scale = Math.sin(time) + 1.5;
+            cube.scale.set(scale, scale, scale);
+            cube.rotation.x += 0.001;
+            cube.rotation.y += 0.001;
         };
     }
 }
@@ -30104,11 +30112,18 @@ parcelHelpers.export(exports, "Plane", ()=>Plane);
 var _three = require("three");
 class Plane {
     constructor(scene){
-        const geometry = new _three.PlaneGeometry(360, 360, 1, 1);
-        const material = new _three.MeshPhongMaterial({
-            color: 0xffffff
+        const size = 360;
+        var texture;
+        texture = new _three.TextureLoader().load("resources/images/tex4.jpg");
+        texture.wrapS = _three.RepeatWrapping;
+        texture.wrapT = _three.RepeatWrapping;
+        texture.repeat.set(10, 10);
+        const geometry = new _three.PlaneGeometry(size, size, 1, 1);
+        const material = new _three.MeshLambertMaterial({
+            map: texture
         });
         const plane = new _three.Mesh(geometry, material);
+        plane.material.side = _three.DoubleSide;
         plane.position.set(0, 0, 0);
         //to make it face up
         plane.rotation.x = -Math.PI / 2;
@@ -30162,7 +30177,7 @@ class Character {
             if (this.model != undefined) {
                 const posy = Math.sin(time) + 3.5;
                 this.model.position.y = posy;
-                const boundingBox = new _three.Box3().setFromObject(this.model);
+            // const boundingBox = new THREE.Box3().setFromObject(this.model);
             // console.log(boundingBox);
             }
         };
@@ -32581,8 +32596,8 @@ parcelHelpers.export(exports, "Pyramids", ()=>Pyramids) //x je random broj izmeÄ
  //isto za z
 ;
 var _three = require("three");
-var _randomIntervalJs = require("../../functions/randomInterval.js");
-var _randomNegativeJs = require("../../functions/randomNegative.js");
+var _randomIntervalJs = require("../functions/randomInterval.js");
+var _randomNegativeJs = require("../functions/randomNegative.js");
 class Pyramids {
     constructor(scene){
         const min = 120;
@@ -32622,7 +32637,7 @@ class Pyramids {
     }
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../../functions/randomInterval.js":"7MwAC","../../functions/randomNegative.js":"2RDzt"}],"7MwAC":[function(require,module,exports) {
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../functions/randomInterval.js":"3m8ws","../functions/randomNegative.js":"5rMwf"}],"3m8ws":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "randomFromInterval", ()=>randomFromInterval);
@@ -32635,7 +32650,7 @@ function randomFromInterval(min, max) {
 //  f1();
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2RDzt":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5rMwf":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "randomNegative", ()=>randomNegative);
@@ -32644,6 +32659,64 @@ function randomNegative(number) {
     else return -number;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iqBn3":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Enemies", ()=>Enemies);
+var _three = require("three");
+class Enemies {
+    constructor(scene){
+        this.enemy;
+        const geometry = new _three.BoxGeometry(2, 2, 2);
+        const material = new _three.MeshPhongMaterial({
+            color: 0x00ffff
+        });
+        const cube = new _three.Mesh(geometry, material);
+        cube.position.set(20, 4, 20);
+        cube.castShadow = true;
+        scene.add(cube);
+        this.enemy = cube;
+        this.update = function(time) {
+        //idle animation, ignore for now because of colision
+        // const scale = Math.sin(time) + 1.5;
+        // cube.scale.set(scale, scale, scale);
+        // cube.rotation.x += 0.001;
+        // cube.rotation.y += 0.001;
+        };
+    }
+}
+
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"UNYeq":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+//mogu ih nazvati enemies.enemy1 enemy2 itd
+//check hw to handle colision after removing enemy
+parcelHelpers.export(exports, "CheckCollision", ()=>CheckCollision);
+var _three = require("three");
+function CheckCollision(character, enemies, battle, scene) {
+    if (character.model && enemies.enemy) {
+        let characterBB = new _three.Box3().setFromObject(character.model);
+        let enemyBB = new _three.Box3().setFromObject(enemies.enemy);
+        if (characterBB.intersectsBox(enemyBB)) {
+            battle.classList.remove("inactive");
+            battle.classList.add("active");
+            scene.remove(enemies.enemy);
+            enemies.enemy.userData.consumed = true;
+            enemies.enemy = null;
+            battle.onclick = function(e) {
+                console.log("clicked");
+                e.target.classList.add("inactive");
+                e.target.classList.remove("active");
+                return false;
+            };
+            return true;
+        } else // battle.classList.add("inactive");
+        // battle.classList.remove("active");
+        return false;
+    } else return false;
+//   return [character, enemies];
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three":"ktPTu"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
 
 //# sourceMappingURL=index.975ef6c8.js.map
