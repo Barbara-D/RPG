@@ -4,11 +4,16 @@ export class Enemies {
   constructor(scene) {
     this.enemyc, this.enemym, this.enemyy;
 
-    const geometryc = new THREE.BoxGeometry(2, 2, 2);
+    const geometryc = new THREE.TetrahedronGeometry(3, 3);
     const geometrym = new THREE.BoxGeometry(3, 3, 3);
     const geometryy = new THREE.BoxGeometry(4, 4, 4);
 
-    const materialc = new THREE.MeshPhongMaterial({ color: 0x84e5f9 });
+    const materialc = new THREE.MeshPhongMaterial({
+      color: 0x84e5f9,
+      shininess: 0,
+      specular: 0xffffff,
+      flatShading: true,
+    });
     const materialm = new THREE.MeshPhongMaterial({ color: 0xf984e5 });
     const materialy = new THREE.MeshPhongMaterial({ color: 0xe5f984 });
 
