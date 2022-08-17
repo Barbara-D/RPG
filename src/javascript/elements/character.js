@@ -44,7 +44,7 @@ export class Character {
     // sine wave animation
     this.update = function (time) {
       if (this.model != undefined) {
-        const posy = Math.sin(time) + 3.5;
+        const posy = Math.sin(time) + 4;
         this.model.position.y = posy;
         // const boundingBox = new THREE.Box3().setFromObject(this.model);
         // console.log(boundingBox);
@@ -52,6 +52,7 @@ export class Character {
     };
 
     //controls
+    //u ovu funkciju potencijalno dodati obstacles
     this.handleInput = function (keyMap, camera) {
       //w on keyboard, forwards
       if (keyMap[87] && this.model.position.z > -halfPlane) {

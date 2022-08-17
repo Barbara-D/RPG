@@ -6,6 +6,7 @@ export function Fight(battle, character, enemy, enemyColor, scene) {
     console.log("clicked");
     battle.classList.add("inactive");
     battle.classList.remove("active");
+
     scene.remove(enemy);
     enemy.userData.consumed = true;
     enemy = null;

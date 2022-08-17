@@ -2,22 +2,46 @@ import * as THREE from "three";
 
 export class Enemies {
   constructor(scene) {
-    this.enemy;
-    const geometry = new THREE.BoxGeometry(2, 2, 2);
-    const material = new THREE.MeshPhongMaterial({ color: 0x00ffff });
-    const cube = new THREE.Mesh(geometry, material);
+    this.enemyc, this.enemym, this.enemyy;
 
-    cube.position.set(20, 4, 20);
-    cube.castShadow = true;
+    const geometryc = new THREE.BoxGeometry(2, 2, 2);
+    const geometrym = new THREE.BoxGeometry(3, 3, 3);
+    const geometryy = new THREE.BoxGeometry(4, 4, 4);
 
-    scene.add(cube);
-    this.enemy = cube;
+    const materialc = new THREE.MeshPhongMaterial({ color: 0x84e5f9 });
+    const materialm = new THREE.MeshPhongMaterial({ color: 0xf984e5 });
+    const materialy = new THREE.MeshPhongMaterial({ color: 0xe5f984 });
+
+    this.enemyc = new THREE.Mesh(geometryc, materialc);
+    this.enemym = new THREE.Mesh(geometrym, materialm);
+    this.enemyy = new THREE.Mesh(geometryy, materialy);
+
+    this.enemyc.position.set(20, 5, -20);
+    this.enemym.position.set(-90, 7, 80);
+    this.enemyy.position.set(50, 9, -50);
+
+    this.enemyc.castShadow = true;
+    this.enemym.castShadow = true;
+    this.enemyy.castShadow = true;
+
+    scene.add(this.enemyc);
+    scene.add(this.enemym);
+    scene.add(this.enemyy);
+
     this.update = function (time) {
-      //idle animation, ignore for now because of colision
-      // const scale = Math.sin(time) + 1.5;
-      // cube.scale.set(scale, scale, scale);
-      // cube.rotation.x += 0.001;
-      // cube.rotation.y += 0.001;
+      const scale = Math.sin(time) + 1.5;
+
+      const posx = Math.sin(time) * 20;
+      const posz = Math.cos(time) * 20;
+      this.enemyc.position.x = posx;
+      this.enemyc.position.z = posz;
+
+      this.enemym.scale.set(scale, scale, scale);
+      this.enemym.position.z = posx * 2;
+
+      this.enemyy.scale.set(scale, scale, scale);
+      this.enemyy.rotation.x += 0.001;
+      this.enemyy.rotation.y -= 0.001;
     };
   }
 }
