@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Light } from "./elements/lights.js";
-import { TestBox } from "./elements/box.js";
+// import { TestBox } from "./elements/box.js";
 import { Plane } from "./elements/plane.js";
 import { Pyramids } from "./elements/pyramids.js";
 import { Character } from "./elements/character.js";
@@ -25,7 +25,7 @@ export function SceneManager(canvas, battle) {
   const dynamicSubjects = [];
   const sceneSubjects = createSceneSubjects(scene);
   var keyMap = [];
-  var theCharacter, theLight, thePlane, theTestBox, thePyramids, theEnemies;
+  var theCharacter, theLight, thePlane, thePyramids, theEnemies;
 
   //create a new scene with a function
   function buildScene() {
@@ -67,7 +67,7 @@ export function SceneManager(canvas, battle) {
       nearPlane,
       farPlane
     );
-    camera.position.set(0, 20, 80);
+    camera.position.set(20, 20, 80);
     // camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     return camera;
@@ -84,7 +84,7 @@ export function SceneManager(canvas, battle) {
   function createSceneSubjects(scene) {
     theCharacter = new Character(scene);
     theLight = new Light(scene);
-    theTestBox = new TestBox(scene);
+    // theTestBox = new TestBox(scene);
     thePlane = new Plane(scene);
     thePyramids = new Pyramids(scene);
     theEnemies = new Enemies(scene);
@@ -93,7 +93,7 @@ export function SceneManager(canvas, battle) {
     const sceneSubjects = [
       theCharacter,
       theLight,
-      theTestBox,
+      // theTestBox,
       thePlane,
       thePyramids,
       theEnemies,

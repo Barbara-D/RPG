@@ -574,7 +574,7 @@ parcelHelpers.export(exports, "SceneManager", ()=>SceneManager);
 var _three = require("three");
 var _orbitControlsJs = require("three/examples/jsm/controls/OrbitControls.js");
 var _lightsJs = require("./elements/lights.js");
-var _boxJs = require("./elements/box.js");
+// import { TestBox } from "./elements/box.js";
 var _planeJs = require("./elements/plane.js");
 var _pyramidsJs = require("./elements/pyramids.js");
 var _characterJs = require("./elements/character.js");
@@ -594,7 +594,7 @@ function SceneManager(canvas, battle) {
     const dynamicSubjects = [];
     const sceneSubjects1 = createSceneSubjects(scene1);
     var keyMap = [];
-    var theCharacter, theLight, thePlane, theTestBox, thePyramids, theEnemies;
+    var theCharacter, theLight, thePlane, thePyramids, theEnemies;
     //create a new scene with a function
     function buildScene() {
         const scene = new _three.Scene();
@@ -625,7 +625,7 @@ function SceneManager(canvas, battle) {
         const nearPlane = 0.1;
         const farPlane = 2000;
         const camera = new _three.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
-        camera.position.set(0, 20, 80);
+        camera.position.set(20, 20, 80);
         // camera.lookAt(new THREE.Vector3(0, 0, 0));
         return camera;
     }
@@ -638,7 +638,7 @@ function SceneManager(canvas, battle) {
     function createSceneSubjects(scene) {
         theCharacter = new (0, _characterJs.Character)(scene);
         theLight = new (0, _lightsJs.Light)(scene);
-        theTestBox = new (0, _boxJs.TestBox)(scene);
+        // theTestBox = new TestBox(scene);
         thePlane = new (0, _planeJs.Plane)(scene);
         thePyramids = new (0, _pyramidsJs.Pyramids)(scene);
         theEnemies = new (0, _enemiesJs.Enemies)(scene);
@@ -646,7 +646,7 @@ function SceneManager(canvas, battle) {
         const sceneSubjects = [
             theCharacter,
             theLight,
-            theTestBox,
+            // theTestBox,
             thePlane,
             thePyramids,
             theEnemies, 
@@ -680,7 +680,7 @@ function SceneManager(canvas, battle) {
     };
 }
 
-},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/box.js":"3Zrf3","./elements/plane.js":"i6Syt","./elements/character.js":"7JrJ2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./elements/pyramids.js":"gA6wQ","./elements/enemies.js":"iqBn3","./functions/checkCollision.js":"UNYeq"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/plane.js":"i6Syt","./elements/character.js":"7JrJ2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./elements/pyramids.js":"gA6wQ","./elements/enemies.js":"iqBn3","./functions/checkCollision.js":"UNYeq"}],"ktPTu":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ACESFilmicToneMapping", ()=>ACESFilmicToneMapping);
@@ -30081,30 +30081,6 @@ class Light {
     }
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3Zrf3":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "TestBox", ()=>TestBox);
-var _three = require("three");
-class TestBox {
-    constructor(scene){
-        const geometry = new _three.BoxGeometry(2, 2, 2);
-        const material = new _three.MeshPhongMaterial({
-            color: 0x00ffff
-        });
-        const cube = new _three.Mesh(geometry, material);
-        cube.position.set(-20, 4, -20);
-        cube.castShadow = true;
-        scene.add(cube);
-        this.update = function(time) {
-            const scale = Math.sin(time) + 1.5;
-            cube.scale.set(scale, scale, scale);
-            cube.rotation.x += 0.001;
-            cube.rotation.y += 0.001;
-        };
-    }
-}
-
 },{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i6Syt":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -30175,13 +30151,14 @@ class Character {
         // sine wave animation
         this.update = function(time) {
             if (this.model != undefined) {
-                const posy = Math.sin(time) + 3.5;
+                const posy = Math.sin(time) + 4;
                 this.model.position.y = posy;
             // const boundingBox = new THREE.Box3().setFromObject(this.model);
             // console.log(boundingBox);
             }
         };
         //controls
+        //u ovu funkciju potencijalno dodati obstacles
         this.handleInput = function(keyMap, camera) {
             //w on keyboard, forwards
             if (keyMap[87] && this.model.position.z > -halfPlane) {
@@ -32666,22 +32643,42 @@ parcelHelpers.export(exports, "Enemies", ()=>Enemies);
 var _three = require("three");
 class Enemies {
     constructor(scene){
-        this.enemy;
-        const geometry = new _three.BoxGeometry(2, 2, 2);
-        const material = new _three.MeshPhongMaterial({
-            color: 0x00ffff
+        this.enemyc, this.enemym, this.enemyy;
+        const geometryc = new _three.BoxGeometry(2, 2, 2);
+        const geometrym = new _three.BoxGeometry(3, 3, 3);
+        const geometryy = new _three.BoxGeometry(4, 4, 4);
+        const materialc = new _three.MeshPhongMaterial({
+            color: 0x84e5f9
         });
-        const cube = new _three.Mesh(geometry, material);
-        cube.position.set(20, 4, 20);
-        cube.castShadow = true;
-        scene.add(cube);
-        this.enemy = cube;
+        const materialm = new _three.MeshPhongMaterial({
+            color: 0xf984e5
+        });
+        const materialy = new _three.MeshPhongMaterial({
+            color: 0xe5f984
+        });
+        this.enemyc = new _three.Mesh(geometryc, materialc);
+        this.enemym = new _three.Mesh(geometrym, materialm);
+        this.enemyy = new _three.Mesh(geometryy, materialy);
+        this.enemyc.position.set(20, 5, -20);
+        this.enemym.position.set(-90, 7, 80);
+        this.enemyy.position.set(50, 9, -50);
+        this.enemyc.castShadow = true;
+        this.enemym.castShadow = true;
+        this.enemyy.castShadow = true;
+        scene.add(this.enemyc);
+        scene.add(this.enemym);
+        scene.add(this.enemyy);
         this.update = function(time) {
-        //idle animation, ignore for now because of colision
-        // const scale = Math.sin(time) + 1.5;
-        // cube.scale.set(scale, scale, scale);
-        // cube.rotation.x += 0.001;
-        // cube.rotation.y += 0.001;
+            const scale = Math.sin(time) + 1.5;
+            const posx = Math.sin(time) * 20;
+            const posz = Math.cos(time) * 20;
+            this.enemyc.position.x = posx;
+            this.enemyc.position.z = posz;
+            this.enemym.scale.set(scale, scale, scale);
+            this.enemym.position.z = posx * 2;
+            this.enemyy.scale.set(scale, scale, scale);
+            this.enemyy.rotation.x += 0.001;
+            this.enemyy.rotation.y -= 0.001;
         };
     }
 }
@@ -32693,23 +32690,43 @@ parcelHelpers.defineInteropFlag(exports);
 //a kad je battle onda je s jednim specificnim enemy
 //mogu ih nazvati enemies.enemy1 enemy2 itd
 //check hw to handle colision after removing enemy
-parcelHelpers.export(exports, "CheckCollision", ()=>CheckCollision);
+parcelHelpers.export(exports, "CheckCollision", ()=>CheckCollision) //this shit wrong sve je isti if
+;
 var _three = require("three");
 var _battleLogicJs = require("./battleLogic.js");
 function CheckCollision(character, enemies, battle, scene) {
-    if (character.model && !("consumed" in enemies.enemy.userData)) {
-        let color = "cyan";
+    if (character.model) {
         let characterBB = new _three.Box3().setFromObject(character.model);
-        let enemyBB = new _three.Box3().setFromObject(enemies.enemy);
-        if (characterBB.intersectsBox(enemyBB)) {
-            (0, _battleLogicJs.Fight)(battle, character, enemies.enemy, color, scene);
-            return false;
+        //cyan enemy interaction
+        if (!("consumed" in enemies.enemyc.userData)) {
+            let color = "C";
+            let enemycBB = new _three.Box3().setFromObject(enemies.enemyc);
+            if (characterBB.intersectsBox(enemycBB)) {
+                (0, _battleLogicJs.Fight)(battle, character, enemies.enemyc, color, scene);
+                return false;
+            }
+            return true;
+        //magenta enemy interaction
+        } else if (!("consumed" in enemies.enemym.userData)) {
+            let color = "M";
+            let enemymBB = new _three.Box3().setFromObject(enemies.enemym);
+            if (characterBB.intersectsBox(enemymBB)) {
+                (0, _battleLogicJs.Fight)(battle, character, enemies.enemym, color, scene);
+                return false;
+            }
+            return true;
+        //yellow enemy interaction
+        } else if (!("consumed" in enemies.enemyy.userData)) {
+            let color = "Y";
+            let enemymBB = new _three.Box3().setFromObject(enemies.enemyy);
+            if (characterBB.intersectsBox(enemymBB)) {
+                (0, _battleLogicJs.Fight)(battle, character, enemies.enemyy, color, scene);
+                return false;
+            }
+            return true;
         }
-        return true;
-    } else // battle.classList.add("inactive");
-    // battle.classList.remove("active");
+    }
     return false;
-//   return [character, enemies];
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three":"ktPTu","./battleLogic.js":"3A8mc"}],"3A8mc":[function(require,module,exports) {
