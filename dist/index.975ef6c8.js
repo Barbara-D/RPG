@@ -598,6 +598,7 @@ function SceneManager(canvas, battle) {
     //create a new scene with a function
     function buildScene() {
         const scene = new _three.Scene();
+        scene.fog = new _three.Fog(0xf7d9aa, 100, 950);
         // scene.background = new THREE.Color("#000");
         return scene;
     }
@@ -32644,11 +32645,14 @@ var _three = require("three");
 class Enemies {
     constructor(scene){
         this.enemyc, this.enemym, this.enemyy;
-        const geometryc = new _three.BoxGeometry(2, 2, 2);
+        const geometryc = new _three.TetrahedronGeometry(3, 3);
         const geometrym = new _three.BoxGeometry(3, 3, 3);
         const geometryy = new _three.BoxGeometry(4, 4, 4);
         const materialc = new _three.MeshPhongMaterial({
-            color: 0x84e5f9
+            color: 0x84e5f9,
+            shininess: 0,
+            specular: 0xffffff,
+            flatShading: true
         });
         const materialm = new _three.MeshPhongMaterial({
             color: 0xf984e5
@@ -32688,8 +32692,6 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 //znaci collision ova funkcija provjerava za sve enemies
 //a kad je battle onda je s jednim specificnim enemy
-//mogu ih nazvati enemies.enemy1 enemy2 itd
-//check hw to handle colision after removing enemy
 parcelHelpers.export(exports, "CheckCollision", ()=>CheckCollision) //this shit wrong sve je isti if
 ;
 var _three = require("three");
@@ -32697,33 +32699,21 @@ var _battleLogicJs = require("./battleLogic.js");
 function CheckCollision(character, enemies, battle, scene) {
     if (character.model) {
         let characterBB = new _three.Box3().setFromObject(character.model);
-        //cyan enemy interaction
-        if (!("consumed" in enemies.enemyc.userData)) {
-            let color = "C";
+        if (!("consumed" in enemies.enemyc.userData) || !("consumed" in enemies.enemym.userData) || !("consumed" in enemies.enemyy.userData)) {
             let enemycBB = new _three.Box3().setFromObject(enemies.enemyc);
-            if (characterBB.intersectsBox(enemycBB)) {
-                (0, _battleLogicJs.Fight)(battle, character, enemies.enemyc, color, scene);
-                return false;
-            }
-            return true;
-        //magenta enemy interaction
-        } else if (!("consumed" in enemies.enemym.userData)) {
-            let color = "M";
             let enemymBB = new _three.Box3().setFromObject(enemies.enemym);
-            if (characterBB.intersectsBox(enemymBB)) {
-                (0, _battleLogicJs.Fight)(battle, character, enemies.enemym, color, scene);
-                return false;
-            }
-            return true;
-        //yellow enemy interaction
-        } else if (!("consumed" in enemies.enemyy.userData)) {
-            let color = "Y";
-            let enemymBB = new _three.Box3().setFromObject(enemies.enemyy);
-            if (characterBB.intersectsBox(enemymBB)) {
-                (0, _battleLogicJs.Fight)(battle, character, enemies.enemyy, color, scene);
-                return false;
-            }
-            return true;
+            let enemyyBB = new _three.Box3().setFromObject(enemies.enemyy);
+            //cyan enemy interaction
+            if (characterBB.intersectsBox(enemycBB)) {
+                (0, _battleLogicJs.Fight)(battle, character, enemies.enemyc, "C", scene);
+                return true;
+            } else if (characterBB.intersectsBox(enemymBB)) {
+                (0, _battleLogicJs.Fight)(battle, character, enemies.enemym, "M", scene);
+                return true;
+            } else if (characterBB.intersectsBox(enemyyBB)) {
+                (0, _battleLogicJs.Fight)(battle, character, enemies.enemyy, "Y", scene);
+                return true;
+            } else return false;
         }
     }
     return false;

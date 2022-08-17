@@ -30,6 +30,8 @@ export function SceneManager(canvas, battle) {
   //create a new scene with a function
   function buildScene() {
     const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
+
     // scene.background = new THREE.Color("#000");
     return scene;
   }
