@@ -1,12 +1,12 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Light } from "./elements/lights.js";
-// import { TestBox } from "./elements/box.js";
 import { Plane } from "./elements/plane.js";
 import { Pyramids } from "./elements/pyramids.js";
 import { Character } from "./elements/character.js";
 import { Enemies } from "./elements/enemies.js";
 import { CheckCollision } from "./functions/checkCollision.js";
+import { Obstacles } from "./elements/obstacles.js";
 
 export function SceneManager(canvas, battle, splash) {
   const clock = new THREE.Clock();
@@ -25,7 +25,7 @@ export function SceneManager(canvas, battle, splash) {
   const dynamicSubjects = [];
   const sceneSubjects = createSceneSubjects(scene);
   var keyMap = [];
-  var theCharacter, theLight, thePlane, thePyramids, theEnemies;
+  var theCharacter, theLight, thePlane, thePyramids, theEnemies, theObstacles;
 
   //create a new scene with a function
   function buildScene() {
@@ -86,10 +86,10 @@ export function SceneManager(canvas, battle, splash) {
   function createSceneSubjects(scene) {
     theCharacter = new Character(scene);
     theLight = new Light(scene);
-    // theTestBox = new TestBox(scene);
     thePlane = new Plane(scene);
     thePyramids = new Pyramids(scene);
     theEnemies = new Enemies(scene);
+    theObstacles = new Obstacles(scene);
 
     //creates an array of just defined scene subjects
     const sceneSubjects = [
@@ -99,6 +99,7 @@ export function SceneManager(canvas, battle, splash) {
       thePlane,
       thePyramids,
       theEnemies,
+      theObstacles,
     ];
     dynamicSubjects.push(theCharacter);
     return sceneSubjects;
@@ -120,7 +121,7 @@ export function SceneManager(canvas, battle, splash) {
 
     //collisions also checked in update function
     //so as things are now, when its colliding, you cannot
-    let collide = CheckCollision(theCharacter, theEnemies, battle, scene);
+    CheckCollision(theCharacter, theEnemies, battle, scene);
 
     //tu nekakav if od battle koji ce blokirati input
     theCharacter.handleInput(keyMap, camera);

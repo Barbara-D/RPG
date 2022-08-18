@@ -1,8 +1,6 @@
 import * as THREE from "three";
 import { Fight } from "./battleLogic.js";
 
-//znaci collision ova funkcija provjerava za sve enemies
-//a kad je battle onda je s jednim specificnim enemy
 export function CheckCollision(character, enemies, battle, scene) {
   if (character.model) {
     let characterBB = new THREE.Box3().setFromObject(character.model);
@@ -38,5 +36,3 @@ export function CheckCollision(character, enemies, battle, scene) {
   }
 }
 return false;
-
-//this shit wrong sve je isti if

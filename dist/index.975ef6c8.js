@@ -575,12 +575,12 @@ parcelHelpers.export(exports, "SceneManager", ()=>SceneManager);
 var _three = require("three");
 var _orbitControlsJs = require("three/examples/jsm/controls/OrbitControls.js");
 var _lightsJs = require("./elements/lights.js");
-// import { TestBox } from "./elements/box.js";
 var _planeJs = require("./elements/plane.js");
 var _pyramidsJs = require("./elements/pyramids.js");
 var _characterJs = require("./elements/character.js");
 var _enemiesJs = require("./elements/enemies.js");
 var _checkCollisionJs = require("./functions/checkCollision.js");
+var _obstaclesJs = require("./elements/obstacles.js");
 function SceneManager(canvas, battle, splash) {
     const clock = new _three.Clock();
     const screenDimensions = {
@@ -595,7 +595,7 @@ function SceneManager(canvas, battle, splash) {
     const dynamicSubjects = [];
     const sceneSubjects1 = createSceneSubjects(scene1);
     var keyMap = [];
-    var theCharacter, theLight, thePlane, thePyramids, theEnemies;
+    var theCharacter, theLight, thePlane, thePyramids, theEnemies, theObstacles;
     //create a new scene with a function
     function buildScene() {
         const scene = new _three.Scene();
@@ -640,10 +640,10 @@ function SceneManager(canvas, battle, splash) {
     function createSceneSubjects(scene) {
         theCharacter = new (0, _characterJs.Character)(scene);
         theLight = new (0, _lightsJs.Light)(scene);
-        // theTestBox = new TestBox(scene);
         thePlane = new (0, _planeJs.Plane)(scene);
         thePyramids = new (0, _pyramidsJs.Pyramids)(scene);
         theEnemies = new (0, _enemiesJs.Enemies)(scene);
+        theObstacles = new (0, _obstaclesJs.Obstacles)(scene);
         //creates an array of just defined scene subjects
         const sceneSubjects = [
             theCharacter,
@@ -651,7 +651,8 @@ function SceneManager(canvas, battle, splash) {
             // theTestBox,
             thePlane,
             thePyramids,
-            theEnemies, 
+            theEnemies,
+            theObstacles, 
         ];
         dynamicSubjects.push(theCharacter);
         return sceneSubjects;
@@ -669,7 +670,7 @@ function SceneManager(canvas, battle, splash) {
         for(let i = 0; i < sceneSubjects1.length; i++)sceneSubjects1[i].update(elapsedTime);
         //collisions also checked in update function
         //so as things are now, when its colliding, you cannot
-        let collide = (0, _checkCollisionJs.CheckCollision)(theCharacter, theEnemies, battle, scene1);
+        (0, _checkCollisionJs.CheckCollision)(theCharacter, theEnemies, battle, scene1);
         //tu nekakav if od battle koji ce blokirati input
         theCharacter.handleInput(keyMap, camera1);
         renderer1.render(scene1, camera1);
@@ -687,7 +688,7 @@ function SceneManager(canvas, battle, splash) {
     };
 }
 
-},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/plane.js":"i6Syt","./elements/character.js":"7JrJ2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./elements/pyramids.js":"gA6wQ","./elements/enemies.js":"iqBn3","./functions/checkCollision.js":"UNYeq"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/plane.js":"i6Syt","./elements/character.js":"7JrJ2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./elements/pyramids.js":"gA6wQ","./elements/enemies.js":"iqBn3","./functions/checkCollision.js":"UNYeq","./elements/obstacles.js":"iRxBm"}],"ktPTu":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ACESFilmicToneMapping", ()=>ACESFilmicToneMapping);
@@ -32699,8 +32700,6 @@ class Enemies {
 },{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"UNYeq":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-//znaci collision ova funkcija provjerava za sve enemies
-//a kad je battle onda je s jednim specificnim enemy
 parcelHelpers.export(exports, "CheckCollision", ()=>CheckCollision);
 var _three = require("three");
 var _battleLogicJs = require("./battleLogic.js");
@@ -32723,7 +32722,7 @@ function CheckCollision(character, enemies, battle, scene) {
         } else return false;
     }
 }
-return false; //this shit wrong sve je isti if
+return false;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three":"ktPTu","./battleLogic.js":"3A8mc"}],"3A8mc":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -32743,6 +32742,38 @@ function Fight(battle, character, enemy, enemyColor, scene) {
     };
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iRxBm":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Obstacles", ()=>Obstacles);
+//grey rocks (the round shapes like char)
+//small black pyramids
+var _three = require("three");
+var _randomIntervalJs = require("../functions/randomInterval.js");
+var _randomNegativeJs = require("../functions/randomNegative.js");
+class Obstacles {
+    constructor(scene){
+        const edge = 120;
+        const geometry = new _three.ConeGeometry(0.5, 1, 3);
+        // const geometry = new THREE.TetrahedronGeometry(1, 2);
+        const material = new _three.MeshMatcapMaterial({
+            color: 0x333333
+        });
+        for(let i = 0; i < 40; i++){
+            var rock = new _three.Mesh(geometry, material);
+            rock.position.z = (0, _randomNegativeJs.randomNegative)((0, _randomIntervalJs.randomFromInterval)(0, edge));
+            rock.position.x = (0, _randomNegativeJs.randomNegative)((0, _randomIntervalJs.randomFromInterval)(0, edge));
+            //   rock.rotation.x = randomFromInterval(0, 1);
+            var size = (0, _randomIntervalJs.randomFromInterval)(2, 15);
+            rock.scale.set(size, size, size);
+            rock.position.y = size / 2;
+            rock.castShadow = true;
+            scene.add(rock);
+        }
+        this.update = function(time) {};
+    }
+}
+
+},{"three":"ktPTu","../functions/randomInterval.js":"3m8ws","../functions/randomNegative.js":"5rMwf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ShInH","8lqZg"], "8lqZg", "parcelRequire4d7b")
 
 //# sourceMappingURL=index.975ef6c8.js.map
