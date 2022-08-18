@@ -3,8 +3,9 @@ import { SceneManager } from "./javascript/application.js";
 //access the div from index.html
 const overworld = document.getElementById("overworld");
 const battle = document.getElementById("battle");
+const splash = document.getElementById("splash_screen");
 //create new instance of scene manager
-const sceneManager = new SceneManager(overworld, battle);
+const sceneManager = new SceneManager(overworld, battle, splash);
 
 bindEventListeners();
 render();

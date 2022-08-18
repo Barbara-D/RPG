@@ -21,6 +21,36 @@ html {
   position: absolute;
   z-index: 1;
 }
+#splash_screen {
+  position: absolute;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  background: #44464a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #c1c3c5;
+}
+#logo {
+  height: 300px;
+  width: 40%;
+  background: url(javascript/elements/resources/images/logo_UI.svg) no-repeat
+    center center;
+  background-size: contain;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+#splash_screen p {
+  font-weight: 500;
+}
+
+#info {
+  margin-top: 70px;
+  margin-bottom: 40px;
+  font-style: italic;
+}
 .active {
   visibility: visible;
 }
