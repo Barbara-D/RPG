@@ -8,7 +8,7 @@ import { Character } from "./elements/character.js";
 import { Enemies } from "./elements/enemies.js";
 import { CheckCollision } from "./functions/checkCollision.js";
 
-export function SceneManager(canvas, battle) {
+export function SceneManager(canvas, battle, splash) {
   const clock = new THREE.Clock();
 
   const screenDimensions = {
@@ -108,6 +108,11 @@ export function SceneManager(canvas, battle) {
   //(In case we need to listen to other DOM events, SceneManager will have more public methods.
   //For example onClick(x, y), will be called by the main(index) when an onclick event is registered.)
   this.update = function () {
+    splash.onclick = function (e) {
+      console.log("clickedUI");
+      splash.classList.add("inactive");
+      splash.classList.remove("active");
+    };
     const elapsedTime = clock.getElapsedTime();
 
     for (let i = 0; i < sceneSubjects.length; i++)

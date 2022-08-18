@@ -36,13 +36,13 @@ export class Enemies {
     this.update = function (time) {
       const scale = Math.sin(time) + 1.5;
 
-      const posx = Math.sin(time) * 20;
-      const posz = Math.cos(time) * 20;
-      this.enemyc.position.x = posx;
-      this.enemyc.position.z = posz;
+      this.enemyc.scale.set(scale, scale, scale);
+      this.enemyc.rotation.x += 0.001;
+      this.enemyc.rotation.y -= 0.001;
 
       this.enemym.scale.set(scale, scale, scale);
-      this.enemym.position.z = posx * 2;
+      this.enemym.rotation.x += 0.001;
+      this.enemym.rotation.y -= 0.001;
 
       this.enemyy.scale.set(scale, scale, scale);
       this.enemyy.rotation.x += 0.001;

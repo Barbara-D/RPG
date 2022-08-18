@@ -536,8 +536,9 @@ var _applicationJs = require("./javascript/application.js");
 //access the div from index.html
 const overworld = document.getElementById("overworld");
 const battle = document.getElementById("battle");
+const splash = document.getElementById("splash_screen");
 //create new instance of scene manager
-const sceneManager = new (0, _applicationJs.SceneManager)(overworld, battle);
+const sceneManager = new (0, _applicationJs.SceneManager)(overworld, battle, splash);
 bindEventListeners();
 render();
 function bindEventListeners() {
@@ -580,7 +581,7 @@ var _pyramidsJs = require("./elements/pyramids.js");
 var _characterJs = require("./elements/character.js");
 var _enemiesJs = require("./elements/enemies.js");
 var _checkCollisionJs = require("./functions/checkCollision.js");
-function SceneManager(canvas, battle) {
+function SceneManager(canvas, battle, splash) {
     const clock = new _three.Clock();
     const screenDimensions = {
         width: canvas.width,
@@ -659,6 +660,11 @@ function SceneManager(canvas, battle) {
     //(In case we need to listen to other DOM events, SceneManager will have more public methods.
     //For example onClick(x, y), will be called by the main(index) when an onclick event is registered.)
     this.update = function() {
+        splash.onclick = function(e) {
+            console.log("clickedUI");
+            splash.classList.add("inactive");
+            splash.classList.remove("active");
+        };
         const elapsedTime = clock.getElapsedTime();
         for(let i = 0; i < sceneSubjects1.length; i++)sceneSubjects1[i].update(elapsedTime);
         //collisions also checked in update function
@@ -30052,8 +30058,10 @@ var _three = require("three");
 class Light {
     constructor(scene){
         let halfPlane = 130;
+        //amibent light definition
         const ambientLight = new _three.AmbientLight(0xffffff, 0.75);
         scene.add(ambientLight);
+        //directional light definition
         const directionalLight = new _three.DirectionalLight(0xffffff, 1.0);
         directionalLight.position.set(0, 40, 0);
         directionalLight.castShadow = true;
@@ -30066,6 +30074,7 @@ class Light {
         directionalLight.shadow.camera.near = 0.5;
         directionalLight.shadow.camera.far = 500;
         scene.add(directionalLight);
+        //frustum visualization
         scene.add(new _three.CameraHelper(directionalLight.shadow.camera));
         // const pointLight = new THREE.PointLight(0xffffff, 0.4);
         // scene.add(pointLight);
@@ -32674,12 +32683,12 @@ class Enemies {
         scene.add(this.enemyy);
         this.update = function(time) {
             const scale = Math.sin(time) + 1.5;
-            const posx = Math.sin(time) * 20;
-            const posz = Math.cos(time) * 20;
-            this.enemyc.position.x = posx;
-            this.enemyc.position.z = posz;
+            this.enemyc.scale.set(scale, scale, scale);
+            this.enemyc.rotation.x += 0.001;
+            this.enemyc.rotation.y -= 0.001;
             this.enemym.scale.set(scale, scale, scale);
-            this.enemym.position.z = posx * 2;
+            this.enemym.rotation.x += 0.001;
+            this.enemym.rotation.y -= 0.001;
             this.enemyy.scale.set(scale, scale, scale);
             this.enemyy.rotation.x += 0.001;
             this.enemyy.rotation.y -= 0.001;
@@ -32692,32 +32701,29 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 //znaci collision ova funkcija provjerava za sve enemies
 //a kad je battle onda je s jednim specificnim enemy
-parcelHelpers.export(exports, "CheckCollision", ()=>CheckCollision) //this shit wrong sve je isti if
-;
+parcelHelpers.export(exports, "CheckCollision", ()=>CheckCollision);
 var _three = require("three");
 var _battleLogicJs = require("./battleLogic.js");
 function CheckCollision(character, enemies, battle, scene) {
     if (character.model) {
         let characterBB = new _three.Box3().setFromObject(character.model);
-        if (!("consumed" in enemies.enemyc.userData) || !("consumed" in enemies.enemym.userData) || !("consumed" in enemies.enemyy.userData)) {
-            let enemycBB = new _three.Box3().setFromObject(enemies.enemyc);
-            let enemymBB = new _three.Box3().setFromObject(enemies.enemym);
-            let enemyyBB = new _three.Box3().setFromObject(enemies.enemyy);
-            //cyan enemy interaction
-            if (characterBB.intersectsBox(enemycBB)) {
-                (0, _battleLogicJs.Fight)(battle, character, enemies.enemyc, "C", scene);
-                return true;
-            } else if (characterBB.intersectsBox(enemymBB)) {
-                (0, _battleLogicJs.Fight)(battle, character, enemies.enemym, "M", scene);
-                return true;
-            } else if (characterBB.intersectsBox(enemyyBB)) {
-                (0, _battleLogicJs.Fight)(battle, character, enemies.enemyy, "Y", scene);
-                return true;
-            } else return false;
-        }
+        let enemycBB = new _three.Box3().setFromObject(enemies.enemyc);
+        let enemymBB = new _three.Box3().setFromObject(enemies.enemym);
+        let enemyyBB = new _three.Box3().setFromObject(enemies.enemyy);
+        //cyan enemy interaction
+        if (characterBB.intersectsBox(enemycBB) && !("consumed" in enemies.enemyc.userData)) {
+            (0, _battleLogicJs.Fight)(battle, character, enemies.enemyc, "C", scene);
+            return true;
+        } else if (characterBB.intersectsBox(enemymBB) && !("consumed" in enemies.enemym.userData)) {
+            (0, _battleLogicJs.Fight)(battle, character, enemies.enemym, "M", scene);
+            return true;
+        } else if (characterBB.intersectsBox(enemyyBB) && !("consumed" in enemies.enemyy.userData)) {
+            (0, _battleLogicJs.Fight)(battle, character, enemies.enemyy, "Y", scene);
+            return true;
+        } else return false;
     }
-    return false;
 }
+return false; //this shit wrong sve je isti if
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three":"ktPTu","./battleLogic.js":"3A8mc"}],"3A8mc":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");

@@ -4,9 +4,11 @@ export class Light {
   constructor(scene) {
     let halfPlane = 130;
 
+    //amibent light definition
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
     scene.add(ambientLight);
 
+    //directional light definition
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
     directionalLight.position.set(0, 40, 0);
 
@@ -21,7 +23,7 @@ export class Light {
     directionalLight.shadow.camera.far = 500;
 
     scene.add(directionalLight);
-
+    //frustum visualization
     scene.add(new THREE.CameraHelper(directionalLight.shadow.camera));
 
     // const pointLight = new THREE.PointLight(0xffffff, 0.4);
