@@ -537,8 +537,9 @@ var _applicationJs = require("./javascript/application.js");
 const overworld = document.getElementById("overworld");
 const battle = document.getElementById("battle");
 const splash = document.getElementById("splash_screen");
+const end = document.getElementById("end");
 //create new instance of scene manager
-const sceneManager = new (0, _applicationJs.SceneManager)(overworld, battle, splash);
+const sceneManager = new (0, _applicationJs.SceneManager)(overworld, battle, splash, end);
 bindEventListeners();
 render();
 function bindEventListeners() {
@@ -581,7 +582,7 @@ var _characterJs = require("./elements/character.js");
 var _enemiesJs = require("./elements/enemies.js");
 var _checkCollisionJs = require("./functions/checkCollision.js");
 var _obstaclesJs = require("./elements/obstacles.js");
-function SceneManager(canvas, battle, splash) {
+function SceneManager(canvas, battle, splash, end) {
     const clock = new _three.Clock();
     const screenDimensions = {
         width: canvas.width,
@@ -670,10 +671,15 @@ function SceneManager(canvas, battle, splash) {
         for(let i = 0; i < sceneSubjects1.length; i++)sceneSubjects1[i].update(elapsedTime);
         //collisions also checked in update function
         //so as things are now, when its colliding, you cannot
-        (0, _checkCollisionJs.CheckCollision)(theCharacter, theEnemies, battle, scene1);
-        //tu nekakav if od battle koji ce blokirati input
-        theCharacter.handleInput(keyMap, camera1);
-        renderer1.render(scene1, camera1);
+        let win = (0, _checkCollisionJs.CheckCollision)(theCharacter, theEnemies, battle, scene1);
+        if (win) {
+            end.classList.add("active");
+            end.classList.remove("inactive");
+        } else {
+            //tu nekakav if od battle koji ce blokirati input
+            theCharacter.handleInput(keyMap, camera1);
+            renderer1.render(scene1, camera1);
+        }
     };
     this.onWindowResize = function() {
         const { width , height  } = canvas;
@@ -688,7 +694,7 @@ function SceneManager(canvas, battle, splash) {
     };
 }
 
-},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/plane.js":"i6Syt","./elements/character.js":"7JrJ2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./elements/pyramids.js":"gA6wQ","./elements/enemies.js":"iqBn3","./functions/checkCollision.js":"UNYeq","./elements/obstacles.js":"iRxBm"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/plane.js":"i6Syt","./elements/pyramids.js":"gA6wQ","./elements/character.js":"7JrJ2","./elements/enemies.js":"iqBn3","./functions/checkCollision.js":"UNYeq","./elements/obstacles.js":"iRxBm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ktPTu":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ACESFilmicToneMapping", ()=>ACESFilmicToneMapping);
@@ -30120,7 +30126,77 @@ class Plane {
     }
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7JrJ2":[function(require,module,exports) {
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gA6wQ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Pyramids", ()=>Pyramids) //x je random broj između 150 i 120, s tim da može biti + ili -
+ //isto za z
+;
+var _three = require("three");
+var _randomIntervalJs = require("../functions/randomInterval.js");
+var _randomNegativeJs = require("../functions/randomNegative.js");
+class Pyramids {
+    constructor(scene){
+        const min = 120;
+        const max = 180;
+        const geometry = new _three.ConeGeometry(0.5, 1, 3);
+        const material = new _three.MeshMatcapMaterial({
+            color: 0x333333
+        });
+        for(let i = 0; i < 120; i++){
+            var cone = new _three.Mesh(geometry, material);
+            cone.position.z = (0, _randomNegativeJs.randomNegative)(i * 1.5);
+            let posx = (0, _randomIntervalJs.randomFromInterval)(min, max);
+            cone.position.x = (0, _randomNegativeJs.randomNegative)(posx);
+            // prettier-ignore
+            if (posx > min + (max - min) / 2) var size = (0, _randomIntervalJs.randomFromInterval)(40, 60);
+            else var size = (0, _randomIntervalJs.randomFromInterval)(10, 45);
+            cone.scale.set(size, size, size);
+            cone.position.y = size / 2.0;
+            // cone.castShadow = true;
+            scene.add(cone);
+        }
+        for(let i1 = 0; i1 < 120; i1++){
+            var cone = new _three.Mesh(geometry, material);
+            cone.position.x = (0, _randomNegativeJs.randomNegative)(i1 * 1.5);
+            let posz = (0, _randomIntervalJs.randomFromInterval)(min, max);
+            cone.position.z = (0, _randomNegativeJs.randomNegative)(posz);
+            if (posz > min + (max - min) / 2) var size = (0, _randomIntervalJs.randomFromInterval)(40, 60);
+            else var size = (0, _randomIntervalJs.randomFromInterval)(10, 45);
+            cone.scale.set(size, size, size);
+            cone.position.y = size / 2.0;
+            scene.add(cone);
+        }
+        // cone.position.set(20, 10, 20);
+        // cone.castShadow = true;
+        // cone.receiveShadow = true;
+        this.update = function(time) {};
+    }
+}
+
+},{"three":"ktPTu","../functions/randomInterval.js":"3m8ws","../functions/randomNegative.js":"5rMwf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3m8ws":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "randomFromInterval", ()=>randomFromInterval);
+function randomFromInterval(min, max) {
+    let result = Math.floor(Math.random() * (max - min + 1) + min);
+    return result;
+//just an example
+//to use :
+//  import { f1 } from "./file1.js";
+//  f1();
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5rMwf":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "randomNegative", ()=>randomNegative);
+function randomNegative(number) {
+    if (Math.random() > 0.5) return number;
+    else return -number;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7JrJ2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Character", ()=>Character) //eventualno dodati ponasanja ako su stisnute dvije tipke istovremeno (al to je puno repetitivnih if-ova), a i ono, ne dodaje nes previse funkcionalnosti
@@ -30211,7 +30287,7 @@ class Character {
     }
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three/examples/jsm/loaders/GLTFLoader":"dVRsF"}],"dVRsF":[function(require,module,exports) {
+},{"three":"ktPTu","three/examples/jsm/loaders/GLTFLoader":"dVRsF","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dVRsF":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "GLTFLoader", ()=>GLTFLoader);
@@ -32577,77 +32653,7 @@ function buildNodeHierarchy(nodeId, parentObject, json, parser) {
     return newGeometry;
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gA6wQ":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Pyramids", ()=>Pyramids) //x je random broj između 150 i 120, s tim da može biti + ili -
- //isto za z
-;
-var _three = require("three");
-var _randomIntervalJs = require("../functions/randomInterval.js");
-var _randomNegativeJs = require("../functions/randomNegative.js");
-class Pyramids {
-    constructor(scene){
-        const min = 120;
-        const max = 180;
-        const geometry = new _three.ConeGeometry(0.5, 1, 3);
-        const material = new _three.MeshMatcapMaterial({
-            color: 0x333333
-        });
-        for(let i = 0; i < 120; i++){
-            var cone = new _three.Mesh(geometry, material);
-            cone.position.z = (0, _randomNegativeJs.randomNegative)(i * 1.5);
-            let posx = (0, _randomIntervalJs.randomFromInterval)(min, max);
-            cone.position.x = (0, _randomNegativeJs.randomNegative)(posx);
-            // prettier-ignore
-            if (posx > min + (max - min) / 2) var size = (0, _randomIntervalJs.randomFromInterval)(40, 60);
-            else var size = (0, _randomIntervalJs.randomFromInterval)(10, 45);
-            cone.scale.set(size, size, size);
-            cone.position.y = size / 2.0;
-            // cone.castShadow = true;
-            scene.add(cone);
-        }
-        for(let i1 = 0; i1 < 120; i1++){
-            var cone = new _three.Mesh(geometry, material);
-            cone.position.x = (0, _randomNegativeJs.randomNegative)(i1 * 1.5);
-            let posz = (0, _randomIntervalJs.randomFromInterval)(min, max);
-            cone.position.z = (0, _randomNegativeJs.randomNegative)(posz);
-            if (posz > min + (max - min) / 2) var size = (0, _randomIntervalJs.randomFromInterval)(40, 60);
-            else var size = (0, _randomIntervalJs.randomFromInterval)(10, 45);
-            cone.scale.set(size, size, size);
-            cone.position.y = size / 2.0;
-            scene.add(cone);
-        }
-        // cone.position.set(20, 10, 20);
-        // cone.castShadow = true;
-        // cone.receiveShadow = true;
-        this.update = function(time) {};
-    }
-}
-
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../functions/randomInterval.js":"3m8ws","../functions/randomNegative.js":"5rMwf"}],"3m8ws":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "randomFromInterval", ()=>randomFromInterval);
-function randomFromInterval(min, max) {
-    let result = Math.floor(Math.random() * (max - min + 1) + min);
-    return result;
-//just an example
-//to use :
-//  import { f1 } from "./file1.js";
-//  f1();
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5rMwf":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "randomNegative", ()=>randomNegative);
-function randomNegative(number) {
-    if (Math.random() > 0.5) return number;
-    else return -number;
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iqBn3":[function(require,module,exports) {
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iqBn3":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Enemies", ()=>Enemies);
@@ -32655,7 +32661,7 @@ var _three = require("three");
 class Enemies {
     constructor(scene){
         this.enemyc, this.enemym, this.enemyy;
-        const geometryc = new _three.TetrahedronGeometry(3, 3);
+        const geometryc = new _three.BoxGeometry(2, 2, 2);
         const geometrym = new _three.BoxGeometry(3, 3, 3);
         const geometryy = new _three.BoxGeometry(4, 4, 4);
         const materialc = new _three.MeshPhongMaterial({
@@ -32673,7 +32679,7 @@ class Enemies {
         this.enemyc = new _three.Mesh(geometryc, materialc);
         this.enemym = new _three.Mesh(geometrym, materialm);
         this.enemyy = new _three.Mesh(geometryy, materialy);
-        this.enemyc.position.set(20, 5, -20);
+        this.enemyc.position.set(-20, 5, -20);
         this.enemym.position.set(-90, 7, 80);
         this.enemyy.position.set(50, 9, -50);
         this.enemyc.castShadow = true;
@@ -32710,21 +32716,15 @@ function CheckCollision(character, enemies, battle, scene) {
         let enemymBB = new _three.Box3().setFromObject(enemies.enemym);
         let enemyyBB = new _three.Box3().setFromObject(enemies.enemyy);
         //cyan enemy interaction
-        if (characterBB.intersectsBox(enemycBB) && !("consumed" in enemies.enemyc.userData)) {
-            (0, _battleLogicJs.Fight)(battle, character, enemies.enemyc, "C", scene);
-            return true;
-        } else if (characterBB.intersectsBox(enemymBB) && !("consumed" in enemies.enemym.userData)) {
-            (0, _battleLogicJs.Fight)(battle, character, enemies.enemym, "M", scene);
-            return true;
-        } else if (characterBB.intersectsBox(enemyyBB) && !("consumed" in enemies.enemyy.userData)) {
-            (0, _battleLogicJs.Fight)(battle, character, enemies.enemyy, "Y", scene);
-            return true;
-        } else return false;
+        if (characterBB.intersectsBox(enemycBB) && !("consumed" in enemies.enemyc.userData)) (0, _battleLogicJs.Fight)(battle, character, enemies.enemyc, "C", scene);
+        else if (characterBB.intersectsBox(enemymBB) && !("consumed" in enemies.enemym.userData)) (0, _battleLogicJs.Fight)(battle, character, enemies.enemym, "M", scene);
+        else if (characterBB.intersectsBox(enemyyBB) && !("consumed" in enemies.enemyy.userData)) (0, _battleLogicJs.Fight)(battle, character, enemies.enemyy, "Y", scene);
+        else if ("consumed" in enemies.enemyc.userData && "consumed" in enemies.enemym.userData && "consumed" in enemies.enemyy.userData) return true;
+        else return false;
     }
 }
-return false;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","three":"ktPTu","./battleLogic.js":"3A8mc"}],"3A8mc":[function(require,module,exports) {
+},{"three":"ktPTu","./battleLogic.js":"3A8mc","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3A8mc":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Fight", ()=>Fight);

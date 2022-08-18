@@ -4,7 +4,7 @@ export class Enemies {
   constructor(scene) {
     this.enemyc, this.enemym, this.enemyy;
 
-    const geometryc = new THREE.TetrahedronGeometry(3, 3);
+    const geometryc = new THREE.BoxGeometry(2, 2, 2);
     const geometrym = new THREE.BoxGeometry(3, 3, 3);
     const geometryy = new THREE.BoxGeometry(4, 4, 4);
 
@@ -21,7 +21,7 @@ export class Enemies {
     this.enemym = new THREE.Mesh(geometrym, materialm);
     this.enemyy = new THREE.Mesh(geometryy, materialy);
 
-    this.enemyc.position.set(20, 5, -20);
+    this.enemyc.position.set(-20, 5, -20);
     this.enemym.position.set(-90, 7, 80);
     this.enemyy.position.set(50, 9, -50);
 

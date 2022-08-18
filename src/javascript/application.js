@@ -8,7 +8,7 @@ import { Enemies } from "./elements/enemies.js";
 import { CheckCollision } from "./functions/checkCollision.js";
 import { Obstacles } from "./elements/obstacles.js";
 
-export function SceneManager(canvas, battle, splash) {
+export function SceneManager(canvas, battle, splash, end) {
   const clock = new THREE.Clock();
 
   const screenDimensions = {
@@ -121,12 +121,16 @@ export function SceneManager(canvas, battle, splash) {
 
     //collisions also checked in update function
     //so as things are now, when its colliding, you cannot
-    CheckCollision(theCharacter, theEnemies, battle, scene);
+    let win = CheckCollision(theCharacter, theEnemies, battle, scene);
+    if (win) {
+      end.classList.add("active");
+      end.classList.remove("inactive");
+    } else {
+      //tu nekakav if od battle koji ce blokirati input
+      theCharacter.handleInput(keyMap, camera);
 
-    //tu nekakav if od battle koji ce blokirati input
-    theCharacter.handleInput(keyMap, camera);
-
-    renderer.render(scene, camera);
+      renderer.render(scene, camera);
+    }
   };
 
   this.onWindowResize = function () {

@@ -15,7 +15,6 @@ export function CheckCollision(character, enemies, battle, scene) {
       !("consumed" in enemies.enemyc.userData)
     ) {
       Fight(battle, character, enemies.enemyc, "C", scene);
-      return true;
     }
     //magenta enemy interaction
     else if (
@@ -23,7 +22,6 @@ export function CheckCollision(character, enemies, battle, scene) {
       !("consumed" in enemies.enemym.userData)
     ) {
       Fight(battle, character, enemies.enemym, "M", scene);
-      return true;
     }
     //yellow enemy interaction
     else if (
@@ -31,8 +29,15 @@ export function CheckCollision(character, enemies, battle, scene) {
       !("consumed" in enemies.enemyy.userData)
     ) {
       Fight(battle, character, enemies.enemyy, "Y", scene);
+    }
+
+    //win condition
+    else if (
+      "consumed" in enemies.enemyc.userData &&
+      "consumed" in enemies.enemym.userData &&
+      "consumed" in enemies.enemyy.userData
+    ) {
       return true;
     } else return false;
   }
 }
-return false;
