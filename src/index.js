@@ -4,8 +4,9 @@ import { SceneManager } from "./javascript/application.js";
 const overworld = document.getElementById("overworld");
 const battle = document.getElementById("battle");
 const splash = document.getElementById("splash_screen");
+const end = document.getElementById("end");
 //create new instance of scene manager
-const sceneManager = new SceneManager(overworld, battle, splash);
+const sceneManager = new SceneManager(overworld, battle, splash, end);
 
 bindEventListeners();
 render();
