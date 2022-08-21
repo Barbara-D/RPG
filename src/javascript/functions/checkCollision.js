@@ -4,6 +4,8 @@ import { Fight } from "./battleLogic.js";
 export function CheckCollision(character, enemies, battle, scene) {
   if (character.model) {
     let characterBB = new THREE.Box3().setFromObject(character.model);
+    // const helper = new THREE.Box3Helper(characterBB, 0xffffff);
+    // scene.add(helper);
 
     let enemycBB = new THREE.Box3().setFromObject(enemies.enemyc);
     let enemymBB = new THREE.Box3().setFromObject(enemies.enemym);
@@ -16,6 +18,7 @@ export function CheckCollision(character, enemies, battle, scene) {
     ) {
       Fight(battle, character, enemies.enemyc, "C", scene);
     }
+
     //magenta enemy interaction
     else if (
       characterBB.intersectsBox(enemymBB) &&

@@ -5,7 +5,8 @@ export class Plane {
     const size = 360;
     var texture;
 
-    texture = new THREE.TextureLoader().load("resources/images/tex4.jpg");
+    texture = new THREE.TextureLoader().load("resources/images/tex.jpg");
+
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
 
