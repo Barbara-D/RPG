@@ -25,3 +25,13 @@ modelLoader.load(
     scene.add(this.model);
   }.bind(this)
 );
+
+this.update = function () {
+  const elapsedTime = clock.getElapsedTime();
+
+  for (let i = 0; i < sceneSubjects.length; i++)
+    sceneSubjects[i].update(elapsedTime);
+  renderer.render(scene, camera);
+};
+
+update;
