@@ -34,7 +34,7 @@ html {
   align-items: center;
   color: #c1c3c5;
 }
-#end {
+.final {
   position: absolute;
   z-index: 3;
   width: 100%;
@@ -47,6 +47,7 @@ html {
   align-items: center;
   color: #c1c3c5;
 }
+
 #logo {
   height: 300px;
   width: 40%;
