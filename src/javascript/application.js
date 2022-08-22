@@ -7,6 +7,7 @@ import { Character } from "./elements/character.js";
 import { Enemies } from "./elements/enemies.js";
 import { CheckCollision } from "./functions/checkCollision.js";
 import { Obstacles } from "./elements/obstacles.js";
+import { Health } from "./elements/health.js";
 
 export function SceneManager(canvas, battle, splash, end) {
   const clock = new THREE.Clock();
@@ -25,7 +26,13 @@ export function SceneManager(canvas, battle, splash, end) {
   const dynamicSubjects = [];
   const sceneSubjects = createSceneSubjects(scene);
   var keyMap = [];
-  var theCharacter, theLight, thePlane, thePyramids, theEnemies, theObstacles;
+  var theCharacter,
+    theLight,
+    thePlane,
+    thePyramids,
+    theEnemies,
+    theObstacles,
+    theHealth;
 
   //create a new scene with a function
   function buildScene() {
@@ -90,7 +97,7 @@ export function SceneManager(canvas, battle, splash, end) {
     thePyramids = new Pyramids(scene);
     theEnemies = new Enemies(scene);
     theObstacles = new Obstacles(scene);
-
+    theHealth = new Health(scene);
     //creates an array of just defined scene subjects
     const sceneSubjects = [
       theCharacter,
@@ -100,6 +107,7 @@ export function SceneManager(canvas, battle, splash, end) {
       thePyramids,
       theEnemies,
       theObstacles,
+      theHealth,
     ];
     dynamicSubjects.push(theCharacter);
     return sceneSubjects;

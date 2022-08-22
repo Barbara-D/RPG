@@ -582,6 +582,7 @@ var _characterJs = require("./elements/character.js");
 var _enemiesJs = require("./elements/enemies.js");
 var _checkCollisionJs = require("./functions/checkCollision.js");
 var _obstaclesJs = require("./elements/obstacles.js");
+var _healthJs = require("./elements/health.js");
 function SceneManager(canvas, battle, splash, end) {
     const clock = new _three.Clock();
     const screenDimensions = {
@@ -596,7 +597,7 @@ function SceneManager(canvas, battle, splash, end) {
     const dynamicSubjects = [];
     const sceneSubjects1 = createSceneSubjects(scene1);
     var keyMap = [];
-    var theCharacter, theLight, thePlane, thePyramids, theEnemies, theObstacles;
+    var theCharacter, theLight, thePlane, thePyramids, theEnemies, theObstacles, theHealth;
     //create a new scene with a function
     function buildScene() {
         const scene = new _three.Scene();
@@ -645,6 +646,7 @@ function SceneManager(canvas, battle, splash, end) {
         thePyramids = new (0, _pyramidsJs.Pyramids)(scene);
         theEnemies = new (0, _enemiesJs.Enemies)(scene);
         theObstacles = new (0, _obstaclesJs.Obstacles)(scene);
+        theHealth = new (0, _healthJs.Health)(scene);
         //creates an array of just defined scene subjects
         const sceneSubjects = [
             theCharacter,
@@ -653,7 +655,8 @@ function SceneManager(canvas, battle, splash, end) {
             thePlane,
             thePyramids,
             theEnemies,
-            theObstacles, 
+            theObstacles,
+            theHealth, 
         ];
         dynamicSubjects.push(theCharacter);
         return sceneSubjects;
@@ -694,7 +697,7 @@ function SceneManager(canvas, battle, splash, end) {
     };
 }
 
-},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/plane.js":"i6Syt","./elements/pyramids.js":"gA6wQ","./elements/character.js":"7JrJ2","./elements/enemies.js":"iqBn3","./functions/checkCollision.js":"UNYeq","./elements/obstacles.js":"iRxBm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls.js":"7mqRv","./elements/lights.js":"1frxN","./elements/plane.js":"i6Syt","./elements/pyramids.js":"gA6wQ","./elements/character.js":"7JrJ2","./elements/enemies.js":"iqBn3","./functions/checkCollision.js":"UNYeq","./elements/obstacles.js":"iRxBm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./elements/health.js":"j8xCk"}],"ktPTu":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ACESFilmicToneMapping", ()=>ACESFilmicToneMapping);
@@ -32905,6 +32908,35 @@ class Obstacles {
     }
 }
 
-},{"three":"ktPTu","../functions/randomInterval.js":"3m8ws","../functions/randomNegative.js":"5rMwf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["glGcU","8lqZg"], "8lqZg", "parcelRequire4d7b")
+},{"three":"ktPTu","../functions/randomInterval.js":"3m8ws","../functions/randomNegative.js":"5rMwf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"j8xCk":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Health", ()=>Health);
+var _three = require("three");
+class Health {
+    constructor(scene){
+        this.plus;
+        const geometry1 = new _three.BoxGeometry(1, 3, 1);
+        const geometry2 = new _three.BoxGeometry(3, 1, 1);
+        const material = new _three.MeshPhongMaterial({
+            color: 0x90ee90
+        });
+        const cube1 = new _three.Mesh(geometry1, material);
+        const cube2 = new _three.Mesh(geometry2, material);
+        cube1.position.set(50, 4, 50);
+        cube2.position.set(50, 4, 50);
+        this.plus = new _three.Group();
+        this.plus.add(cube1);
+        this.plus.add(cube2);
+        this.plus.castShadow = true;
+        scene.add(this.plus);
+        this.update = function(time) {
+            const posy = Math.sin(time) + 2;
+            this.plus.position.y = posy;
+        };
+    }
+}
+
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["glGcU","8lqZg"], "8lqZg", "parcelRequire4d7b")
 
 //# sourceMappingURL=index.975ef6c8.js.map
