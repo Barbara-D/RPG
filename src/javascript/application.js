@@ -8,8 +8,9 @@ import { Enemies } from "./elements/enemies.js";
 import { CheckCollision } from "./functions/checkCollision.js";
 import { Obstacles } from "./elements/obstacles.js";
 import { Health } from "./elements/health.js";
+import { InlineFunctions } from "terser";
 
-export function SceneManager(canvas, battle, splash, end) {
+export function SceneManager(canvas, battle, splash, end, restart) {
   const clock = new THREE.Clock();
 
   const screenDimensions = {
@@ -129,7 +130,13 @@ export function SceneManager(canvas, battle, splash, end) {
 
     //collisions also checked in update function
     //so as things are now, when its colliding, you cannot
-    let win = CheckCollision(theCharacter, theEnemies, battle, scene);
+    let win = CheckCollision(
+      theCharacter,
+      theEnemies,
+      theHealth,
+      battle,
+      scene
+    );
     if (win) {
       end.classList.add("active");
       end.classList.remove("inactive");
@@ -139,6 +146,13 @@ export function SceneManager(canvas, battle, splash, end) {
 
       renderer.render(scene, camera);
     }
+
+    Array.prototype.forEach.call(restart, function (element) {
+      element.onclick = function (e) {
+        window.location.reload();
+        console.log("reloaded");
+      };
+    });
   };
 
   this.onWindowResize = function () {

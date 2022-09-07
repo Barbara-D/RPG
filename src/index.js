@@ -5,8 +5,9 @@ const overworld = document.getElementById("overworld");
 const battle = document.getElementById("battle");
 const splash = document.getElementById("splash_screen");
 const end = document.getElementById("end");
+const restart = document.getElementsByClassName("restart");
 //create new instance of scene manager
-const sceneManager = new SceneManager(overworld, battle, splash, end);
+const sceneManager = new SceneManager(overworld, battle, splash, end, restart);
 
 bindEventListeners();
 render();

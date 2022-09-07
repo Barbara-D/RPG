@@ -28,26 +28,29 @@
       <h1>YOU WIN!</h1>
       <br />
       <p>Thanks for playing :)</p>
+      <div class="restart">RESTART</div>
     </div>
 
     <div id="gameover" class="final inactive">
       <h1>GAME OVER!</h1>
       <br />
       <p>Thanks for playing :)</p>
+      <div class="restart">RESTART</div>
     </div>
 
+    <div id="hp_persistent" class="active">
+      <div id="hp_bar">
+        <progress id="hp_green" value="100" max="100"></progress>
+      </div>
+      <div id="hp_text">
+        <span>HP</span>
+        <span id="hp_value">100</span>
+        <span>/100</span>
+      </div>
+    </div>
     <!-- put back to inactive after designing -->
     <div id="battle" class="inactive">
       <div id="character">
-        <div id="hp_bar">
-          <progress id="hp_green" value="100" max="100"></progress>
-        </div>
-        <div id="hp_text">
-          <span>HP</span>
-          <span id="hp_value">100</span>
-          <span>/100</span>
-        </div>
-
         <h1>Select action:</h1>
         <ul>
           <li>
@@ -93,6 +96,10 @@
         </ul>
       </div>
       <div id="enemy">
+        <span id="close">x</span>
+
+        <h1>Enemy:</h1>
+        <div id="enemy_col"></div>
         <div id="enemy_hp_bar">
           <progress id="enemy_hp_green" value="100" max="100"></progress>
         </div>
@@ -101,8 +108,6 @@
           <span id="enemy_hp_value">100</span>
           <span>/100</span>
         </div>
-        <h1>Enemy:</h1>
-        <div id="enemy_col"></div>
         <div id="descriptor_ch">You have started the battle.</div>
         <div id="descriptor_en">The enemy is waiting for your move.</div>
       </div>

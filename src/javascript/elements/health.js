@@ -11,19 +11,18 @@ export class Health {
     const cube1 = new THREE.Mesh(geometry1, material);
     const cube2 = new THREE.Mesh(geometry2, material);
 
-    cube1.position.set(50, 4, 50);
-    cube2.position.set(50, 4, 50);
-
     this.plus = new THREE.Group();
     this.plus.add(cube1);
     this.plus.add(cube2);
     this.plus.castShadow = true;
+    this.plus.position.set(50, 4, 50);
 
     scene.add(this.plus);
 
     this.update = function (time) {
-      const posy = Math.sin(time) + 2;
-      this.plus.position.y = posy;
+      // const posy = Math.sin(time) + 3;
+      // this.plus.position.y = posy;
+      this.plus.rotation.y += 0.002;
     };
   }
 }

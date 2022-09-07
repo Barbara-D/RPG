@@ -2,6 +2,7 @@ import { randomFromInterval } from "./randomInterval.js";
 
 export function Fight(battle, character, enemy, enemyColor, scene) {
   //testing
+  let close = document.getElementById("close");
   let enemy_div = document.getElementById("enemy_col");
   let hp_bar = document.getElementById("hp_green");
   let hp_value = document.getElementById("hp_value");
@@ -39,6 +40,14 @@ export function Fight(battle, character, enemy, enemyColor, scene) {
   battle.classList.remove("inactive");
   battle.classList.add("active");
 
+  close.onclick = function (e) {
+    battle.classList.add("inactive");
+    battle.classList.remove("active");
+    resetUI();
+    enemy_hp_bar.value = 100;
+    enemy_hp_value.innerText = enemy_hp_bar.value;
+  };
+
   //----K attack functionality----
   attack_k.onclick = function (e) {
     enemy_hp_bar.value -= 20;
@@ -60,7 +69,14 @@ export function Fight(battle, character, enemy, enemyColor, scene) {
 
   //----defense functionality----
   attack_d.onclick = function (e) {
-    descriptor_ch.innerText = "You took a defensive stance.";
+    descriptor_ch.innerText =
+      "You took a defensive stance and recovered 10 HP.";
+    hp_bar.value += 10;
+    if (hp_bar.value > 100) {
+      hp_bar.value = 100;
+    }
+    hp_value.innerText = hp_bar.value;
+
     if (enemy_hp_bar.value > 0) {
       enemyAttack(1, 10);
     }
@@ -72,6 +88,8 @@ export function Fight(battle, character, enemy, enemyColor, scene) {
     if (enemyColor === "C") {
       descriptor_ch.innerText = "You used the C attack. There is no effect!";
     } else if (enemyColor === "M") {
+      // enemy_div.style.backgroundColor = "red";
+
       enemy_hp_bar.value -= 30;
       enemy_hp_value.innerText = enemy_hp_bar.value;
       descriptor_ch.innerText = "You used the C attack. It's super effective!";
@@ -147,6 +165,10 @@ export function Fight(battle, character, enemy, enemyColor, scene) {
     }
   };
 
+  // attack_c.onmouseup = function (e) {
+  //   resetColor(enemy_div, enemyColor);
+  // };
+
   //----functions----
   function enemyAttack(min, max) {
     damage = randomFromInterval(min, max);
@@ -175,4 +197,15 @@ function resetUI() {
   //reset the  text
   descriptor_ch.innerText = "You have started the battle.";
   descriptor_en.innerText = "The enemy is waiting for your move.";
+}
+function resetColor(div, color) {
+  if (color === "C") {
+    div.style.backgroundColor = "#91abad";
+  }
+  if (color === "M") {
+    div.style.backgroundColor = "#a791ad";
+  }
+  if (color === "Y") {
+    div.style.backgroundColor = "#adaa91";
+  }
 }
